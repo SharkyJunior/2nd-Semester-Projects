@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include "appcontext.h"
+#include "constants.h"
 
 enum Operation {
     Initialization,
@@ -14,15 +15,10 @@ enum Operation {
 
 struct AppParams {
     SelectedBase newFromBase, newToBase;
-    char input[33];
-    char output[33];
+    char input[STR_LEN + 1];
+    char output[STR_LEN + 1];
 };
 
 void doOperation(Operation operation, AppContext* context, AppParams* params);
-void doConvert(AppContext* context);
-void doInitialization(AppContext* context);
-void updateBases(AppContext* context, SelectedBase newFrom, SelectedBase newTo);
-void doSwap(AppContext* context);
-void convertSwitch(AppContext* context, char* input);
 
 #endif // ENTRYPOINT_H

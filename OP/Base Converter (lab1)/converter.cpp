@@ -1,9 +1,8 @@
 #include "appcontext.h"
 #include "converter.h"
 #include "utilities.h"
+#include "constants.h"
 
-#define STR_LEN 32
-#define OCT_MAX_LEN 10
 
 const int numBits = sizeof(int) * BYTE;
 

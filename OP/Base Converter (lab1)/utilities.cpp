@@ -1,9 +1,6 @@
 #include "utilities.h"
 #include "appcontext.h"
-
-#define STRLEN 32
-#define INT_MIN -2147483648
-#define INT_MAX 2147483647
+#include "constants.h"
 
 char* allocStr(size_t size) {
     char* str = (char*) calloc(size, sizeof(char));
@@ -33,7 +30,7 @@ char* trimZeros(char *str, ErrorCode* err) {
 char* padWithZeros(const char *input, ErrorCode* err) {
     char *result;
     size_t len = strlen(input);
-    if (len >= STRLEN) {
+    if (len >= STR_LEN) {
         result = (char *) malloc(len + 1);
         if (result == NULL)
             *err = MEM_ALLOC_ERR;
@@ -41,14 +38,14 @@ char* padWithZeros(const char *input, ErrorCode* err) {
             strncpy(result, input, len + 1);
     }
     else {
-        size_t numZeros = STRLEN - len;
-        result = (char *) malloc(STRLEN + 1);
+        size_t numZeros = STR_LEN - len;
+        result = (char *) malloc(STR_LEN + 1);
         if (result == NULL)
             *err = MEM_ALLOC_ERR;
         else {
             memset(result, '0', numZeros);
             strncpy(result + numZeros, input, len + 1);
-            result[STRLEN] = '\0';
+            result[STR_LEN] = '\0';
         }
     }
 

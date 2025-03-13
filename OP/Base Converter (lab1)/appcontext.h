@@ -1,7 +1,7 @@
 #ifndef APPCONTEXT_H
 #define APPCONTEXT_H
 
-#define MAX_LEN 32
+#include "constants.h"
 
 enum SelectedBase {
     DEC,
@@ -21,8 +21,8 @@ enum ErrorCode {
 struct AppContext {
     ErrorCode errorCode = OK;
     SelectedBase fromBase, toBase;
-    char input[MAX_LEN + 1];
-    char output[MAX_LEN + 1];
+    char input[STR_LEN + 1];
+    char output[STR_LEN + 1];
 };
 
 #endif // APPCONTEXT_H

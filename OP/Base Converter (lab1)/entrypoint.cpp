@@ -1,11 +1,17 @@
 #include "entrypoint.h"
 #include "converter.h"
 #include "utilities.h"
+#include "constants.h"
 #include <stdlib.h>
 #include <string.h>
 
-#define STR_LEN 32
-#define DEC_BASE 10
+void doConvert(AppContext* context);
+void copyInputToContext(AppContext* context, AppParams* params);
+void copyOutputToContext(AppContext* context, AppParams* params);
+void doInitialization(AppContext* context);
+void updateBases(AppContext* context, SelectedBase newFrom, SelectedBase newTo);
+void doSwap(AppContext* context);
+void convertSwitch(AppContext* context, char* input);
 
 void doOperation(Operation operation, AppContext* context, AppParams* params) {
     context->errorCode = OK;
@@ -15,8 +21,7 @@ void doOperation(Operation operation, AppContext* context, AppParams* params) {
         doInitialization(context);
         break;
     case Convert:
-        strncpy(context->input, params->input, strlen(params->input) + 1);
-        context->input[strlen(params->input)] = '\0';
+        copyInputToContext(context, params);
         doConvert(context);
         break;
     case CheckInput:
@@ -25,8 +30,8 @@ void doOperation(Operation operation, AppContext* context, AppParams* params) {
         updateBases(context, params->newFromBase, params->newToBase);
         break;
     case Swap:
-        strncpy(context->input, params->input, strlen(params->input) );
-        strncpy(context->output, params->output, strlen(params->output) );
+        copyInputToContext(context, params);
+        copyOutputToContext(context, params);
         doSwap(context);
         break;
     }
@@ -36,6 +41,14 @@ void doInitialization(AppContext* context) {
     context->fromBase = DEC;
     context->toBase = BIN;
     context->input[0] = '\0';
+}
+
+void copyInputToContext(AppContext* context, AppParams* params) {
+    strncpy(context->input, params->input, strlen(params->input) + 1);
+}
+
+void copyOutputToContext(AppContext* context, AppParams* params) {
+    strncpy(context->output, params->output, strlen(params->output) + 1);
 }
 
 void doConvert(AppContext* context) {

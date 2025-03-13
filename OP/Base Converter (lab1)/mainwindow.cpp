@@ -2,9 +2,8 @@
 #include "./ui_mainwindow.h"
 #include "entrypoint.h"
 #include "appcontext.h"
+#include "constants.h"
 #include <QClipboard>
-
-#define STR_LEN 32
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -40,79 +39,66 @@ void MainWindow::updateUi() {
 
 void MainWindow::on_fromDecRadioButton_clicked()
 {
-    AppParams* params = (AppParams*) malloc(sizeof(AppParams));
-    params->newFromBase = DEC;
-    params->newToBase = context.toBase;
+    AppParams params;
+    params.newFromBase = DEC;
+    params.newToBase = context.toBase;
 
-    doOperation(UpdateBases, &context, params);
-
-    free(params);
+    doOperation(UpdateBases, &context, &params);
 }
 
 void MainWindow::on_fromBinRadioButton_clicked()
 {
-    AppParams* params = (AppParams*) malloc(sizeof(AppParams));
-    params->newFromBase = BIN;
-    params->newToBase = context.toBase;
+    AppParams params;
+    params.newFromBase = BIN;
+    params.newToBase = context.toBase;
 
-    doOperation(UpdateBases, &context, params);
-
-    free(params);
+    doOperation(UpdateBases, &context, &params);
 }
 
 void MainWindow::on_fromOctRadioButton_clicked()
 {
-    AppParams* params = (AppParams*) malloc(sizeof(AppParams));
-    params->newFromBase = OCT;
-    params->newToBase = context.toBase;
+    AppParams params;
+    params.newFromBase = OCT;
+    params.newToBase = context.toBase;
 
-    doOperation(UpdateBases, &context, params);
-
-    free(params);
+    doOperation(UpdateBases, &context, &params);
 }
 
 void MainWindow::on_toDecRadioButton_clicked()
 {
-    AppParams* params = (AppParams*) malloc(sizeof(AppParams));
-    params->newFromBase = context.fromBase;
-    params->newToBase = DEC;
+    AppParams params;
+    params.newFromBase = context.fromBase;
+    params.newToBase = DEC;
 
-    doOperation(UpdateBases, &context, params);
-
-    free(params);
+    doOperation(UpdateBases, &context, &params);
 }
 
 void MainWindow::on_toBinRadioButton_clicked()
 {
-    AppParams* params = (AppParams*) malloc(sizeof(AppParams));
-    params->newFromBase = context.fromBase;
-    params->newToBase = BIN;
+    AppParams params;
+    params.newFromBase = context.fromBase;
+    params.newToBase = BIN;
 
-    doOperation(UpdateBases, &context, params);
-
-    free(params);
+    doOperation(UpdateBases, &context, &params);
 }
 
 void MainWindow::on_toOctRadioButton_clicked()
 {
-    AppParams* params = (AppParams*) malloc(sizeof(AppParams));
-    params->newFromBase = context.fromBase;
-    params->newToBase = OCT;
+    AppParams params;
+    params.newFromBase = context.fromBase;
+    params.newToBase = OCT;
 
-    doOperation(UpdateBases, &context, params);
-
-    free(params);
+    doOperation(UpdateBases, &context, &params);
 }
 
 void MainWindow::on_convertButton_clicked() {
-    AppParams* params = (AppParams*) malloc(sizeof(AppParams));
+    AppParams params;
     QByteArray array = ui->inputLineEdit->text().toLocal8Bit();
-    strncpy(params->input, array.data(), array.size());
+    strncpy(params.input, array.data(), array.size());
 
-    doOperation(Convert, &context, params);
+    doOperation(Convert, &context, &params);
 
-    free(params);
-
+    ui->outputLineEdit->setText(QString::fromUtf8(context.output));
     handleErrorCode();
 
     updateUi();
@@ -125,15 +111,13 @@ void MainWindow::on_copyButton_clicked()
 }
 
 void MainWindow::on_swapButton_clicked() {
-    AppParams* params = (AppParams*) malloc(sizeof(AppParams));
+    AppParams params;
     QByteArray inputArray = ui->inputLineEdit->text().toLocal8Bit();
-    strncpy(params->input, inputArray.data(), STR_LEN + 1);
+    strncpy(params.input, inputArray.data(), STR_LEN + 1);
     QByteArray outputArray = ui->outputLineEdit->text().toLocal8Bit();
-    strncpy(params->output, outputArray.data(), STR_LEN + 1);
+    strncpy(params.output, outputArray.data(), STR_LEN + 1);
 
-    doOperation(Swap, &context, params);
-
-    free(params);
+    doOperation(Swap, &context, &params);
 
     updateUi();
 }
@@ -166,7 +150,6 @@ void MainWindow::updateRadioButtons() {
 
 void MainWindow::handleErrorCode() {
     if (context.errorCode == OK) {
-        ui->outputLineEdit->setText(QString::fromUtf8(context.output));
         ui->statusLabel->setText("");
     }
     else if (context.errorCode == INVALID_INPUT)

@@ -30,6 +30,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         utilities.cpp
         entrypoint.h
         entrypoint.cpp
+        constants.h
 
     )
 # Define target properties for Android with Qt 6 as:
