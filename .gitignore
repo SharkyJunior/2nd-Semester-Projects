@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# Generated folders
+main.dSYM/
+bin/
