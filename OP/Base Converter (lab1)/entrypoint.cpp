@@ -45,6 +45,7 @@ void doInitialization(AppContext* context) {
 
 void copyInputToContext(AppContext* context, AppParams* params) {
     strncpy(context->input, params->input, strlen(params->input) + 1);
+    context->input[strlen(params->input)] = '\0';
 }
 
 void copyOutputToContext(AppContext* context, AppParams* params) {

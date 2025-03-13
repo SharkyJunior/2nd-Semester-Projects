@@ -2,6 +2,8 @@
 #include "appcontext.h"
 #include "constants.h"
 
+#include <string.h>
+
 char* allocStr(size_t size) {
     char* str = (char*) calloc(size, sizeof(char));
     str[size-1] = '\0';

@@ -5,6 +5,9 @@
 #include "constants.h"
 #include <QClipboard>
 
+
+QString getDescByErr(const ErrorCode* err);
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -149,13 +152,20 @@ void MainWindow::updateRadioButtons() {
 }
 
 void MainWindow::handleErrorCode() {
-    if (context.errorCode == OK) {
-        ui->statusLabel->setText("");
-    }
-    else if (context.errorCode == INVALID_INPUT)
-        ui->statusLabel->setText("Invalid input!");
-    else if (context.errorCode == INTEGER_OVERFLOW)
-        ui->statusLabel->setText("Value larger than int!");
+    QString msg = getDescByErr(&context.errorCode);
+    ui->statusLabel->setText(msg);
+}
+
+QString getDescByErr(const ErrorCode* err) {
+    QString desc;
+    if (*err == OK)
+        desc = QString::fromUtf8("");
+    else if (*err == INVALID_INPUT)
+        desc = QString::fromUtf8("Invalid input!");
+    else if (*err == INTEGER_OVERFLOW)
+        desc = QString::fromUtf8("Value larger than int!");
     else
-        ui->statusLabel->setText("Error while converting!");
+        desc = QString::fromUtf8("Error while converting!");
+
+    return desc;
 }

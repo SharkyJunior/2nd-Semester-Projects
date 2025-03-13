@@ -3,7 +3,6 @@
 #include "utilities.h"
 #include "constants.h"
 
-
 const int numBits = sizeof(int) * BYTE;
 
 char* intToBinaryString(int num, ErrorCode* err) {
