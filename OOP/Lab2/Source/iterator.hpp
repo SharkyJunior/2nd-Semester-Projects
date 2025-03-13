@@ -8,9 +8,13 @@ class Iterator {
 
     public:
         Iterator(set<T> iterable);
-        next();
+        void next();
         T value();
-        
+        bool is_end();
+        Iterator<T> operator++();
+        T operator*();
+        bool operator ==(Iterator<T> &b);
+        bool operator !=(Iterator<T> &b);
 };
 
 #endif
