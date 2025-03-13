@@ -52,9 +52,10 @@ char* binaryStringToOctString(const char* binaryStr, ErrorCode* err) {
         *err = MEM_ALLOC_ERR;
         free(octalStr);
     }
-    else
+    else {
         for (int i = 0; i < offsetStrLen / OCT_DIGIT_LEN; i++)
             octalStr[i] = binaryDigitToOct(offsetBinStr + i * OCT_DIGIT_LEN) + '0';
+    }
 
     free(offsetBinStr);
 
@@ -113,7 +114,7 @@ char* octDigitToBinary(int digit) {
 char* offsetBinaryStrToOct(const char* binaryStr) {
     int sumLen = 0;
     int len = strlen(binaryStr);
-    int offset = OCT - (len % OCT_DIGIT_LEN);
+    int offset = OCT - (len % OCT_DIGIT_LEN) + 1;
     char* offsetStr = allocStr(offset + 1);
     if (offsetStr != NULL) {
         for (int i = 0; i < offset; i++)
