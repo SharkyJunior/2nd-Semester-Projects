@@ -34,3 +34,6 @@
 # Generated folders
 main.dSYM/
 bin/
+
+# CMake files
+CMakeLists.txt.user
