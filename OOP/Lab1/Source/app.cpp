@@ -4,8 +4,6 @@
 #include <iomanip>
 #include <stdlib.h> 
 #include "app.hpp"
-#include "utils.hpp"
-#include "shapes.hpp"
 
 using namespace std;
 
@@ -18,36 +16,40 @@ Application::Application() {
     menuActions[5] = &Application::sortByPerimeter;
     menuActions[6] = &Application::deleteShape;
     menuActions[7] = &Application::deleteShapesByPerimeter;
+
+    isRunning = false;
 }
 
-int Application::run() {
+
+void Application::run() {
+    isRunning = true;
     cout << fixed << setprecision(2);
-    int status = 0, option = 1;
+    int option = 1;
     string input;
 
-    printMenu();
-    option = readOption();
-    system("clear");
-    printMenu();
-    while (option) {
+    while (isRunning) {
+        printMenu();
         try {
+            option = readOption();
+            if (option == 0) {
+                stop();
+                continue;
+            }
             auto it = menuActions.find(option);
-            if (it != menuActions.end()) {
+            if (it != menuActions.end())
                 (this->*(it->second))();
-            } else {
-                cout << "\nError: No such option.\n";
-            }    
+            else
+                throw invalid_argument("\nError: No such option.\n");
         }
         catch (const exception& e) {
             cout << endl << e.what() << endl;
         }
-        option = readOption();
-        system("clear");
-        printMenu();
     }
+}
 
-    system("clear");
-    return status;
+void Application::stop() {
+    isRunning = false;
+    cout << "\nGoodbye!\n";
 }
 
 Application::~Application() {
@@ -63,7 +65,7 @@ void Application::addShape()
 void Application::printInfo() 
 {
     if (shapes.size() > 0) {
-        cout << "\nShape information:\n";
+        cout << "\nShape information:\n" << shapes.size();
         for (int i = 0; i < shapes.size(); i++)
             cout << to_string(i+1) + ". " + shapes[i]->getInfo() + "\n";
     }
@@ -92,7 +94,7 @@ void Application::printPerimeterSum() {
 }
 
 void Application::sortByPerimeter() {
-    sort(shapes.begin(), shapes.end(), *cmpPerimeters);
+    sort(shapes.begin(), shapes.end());
 }
 
 void Application::deleteShape() {
@@ -138,14 +140,14 @@ unsigned Application::readOption() {
 Shape* Application::readShape() {
     Shape* shape;
     string input, name;
-    ShapeType shapeType;
+    ShapeSelectorOptions opt;
 
     cout << "\nChoose shape type:\n1 - Circle\n2 - Rectangle\n3 - Triangle\n";
-    shapeType = (ShapeType) readOption(); // add checks
+    opt = (ShapeSelectorOptions) readOption(); // add checks
 
     cout << "Input shape name:\n> ";
     cin >> name;
-    if (shapeType == CIRCLE) {
+    if (opt == CIRCLE) {
         double x, y, r;
         cout << "Input center X:\n> ";
         cin >> input;
@@ -156,10 +158,10 @@ Shape* Application::readShape() {
         cout << "Input radius:\n> ";
         cin >> input;
         r = stod(input);
-        Point c = {x, y};
+        Point c = Point(x, y);
         shape = new Circle(name, c, r);
     }
-    else if (shapeType == RECTANGLE) {
+    else if (opt == RECTANGLE) {
         double x1, x2, y1, y2;
         cout << "Input first point X:\n> ";
         cin >> input;
@@ -173,7 +175,7 @@ Shape* Application::readShape() {
         cout << "Input second point Y:\n> ";
         cin >> input;
         y2 = stod(input);
-        Point c1 = {x1, y1}, c2 = {x2, y2};
+        Point c1 = Point(x1, y1), c2 = Point(x2, y2);
         shape = new Rectangle(name, c1, c2);
     }
     else
@@ -197,7 +199,7 @@ Shape* Application::readShape() {
         cout << "Input third point Y:\n> ";
         cin >> input;
         y3 = stod(input);
-        Point c1 = {x1, y1}, c2 = {x2, y2}, c3 = {x3, y3};
+        Point c1 = Point(x1, y1), c2 = Point(x2, y2), c3 = Point(x3, y3);
         shape = new Triangle(name, c1, c2, c3);
     }
     return shape;

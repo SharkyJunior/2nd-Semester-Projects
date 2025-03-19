@@ -4,19 +4,25 @@
 #include <vector>
 #include <map>
 #include <functional>
-#include "shapes.hpp"
+
+#include "Shapes/shape.hpp"
+#include "Shapes/point.hpp"
+#include "Shapes/circle.hpp"
+#include "Shapes/rectangle.hpp"
+#include "Shapes/triangle.hpp"
 
 using namespace std;
-
-enum ShapeType {
-    CIRCLE = 1,
-    RECTANGLE = 2,
-    TRIANGLE = 3
-};
 
 class Application {
     vector<Shape*> shapes;
     map<int, void (Application::*)()> menuActions;
+    bool isRunning = true;
+
+    enum ShapeSelectorOptions {
+        CIRCLE = 1,
+        RECTANGLE = 2,
+        TRIANGLE = 3
+    };
 
     // menu actions
     void addShape();
@@ -33,10 +39,10 @@ class Application {
     Shape* readShape(); 
 
     public:
-        static const unsigned menuActionCount = 7;
         Application();
         ~Application();
-        int run();
+        void run();
+        void stop();
 };
 
 #endif
