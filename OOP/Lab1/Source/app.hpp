@@ -16,7 +16,7 @@ using namespace std;
 class Application {
     vector<Shape*> shapes;
     map<int, void (Application::*)()> menuActions;
-    bool isRunning = true;
+    bool isRunning;
 
     enum ShapeSelectorOptions {
         CIRCLE = 1,

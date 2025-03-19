@@ -2,8 +2,8 @@
 #include <sstream>
 #include <iomanip>
 
-Circle::Circle(string name, const Point& center, double radius) 
-    : Shape(name)
+Circle::Circle(const string& name, const Point& center, double radius) 
+    : Shape::Shape(name)
 {
     if (radius <= 0)
         throw invalid_argument("Radius can't be negative");

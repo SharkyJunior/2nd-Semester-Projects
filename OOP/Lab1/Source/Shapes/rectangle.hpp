@@ -8,7 +8,7 @@ class Rectangle: public Shape {
     Point point1, point2;
     
     public:
-        Rectangle(string& name, const Point& point1, const Point& point2) : Shape(name) {};
+        Rectangle(const string& name, const Point& point1, const Point& point2);
         double getPerimeter() override;
         string getInfo() override;
 };

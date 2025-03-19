@@ -11,7 +11,6 @@ class Shape {
 
     public:
         Shape(const string& name); 
-        // ~Shape() = 0;
         virtual double getPerimeter() = 0;
         virtual string getInfo() = 0;
         virtual string getName();

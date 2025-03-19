@@ -11,9 +11,10 @@ class Triangle: public Shape {
     double getSideLength(const Point& a, const Point& b) const;
     
     public:
-        Triangle(string name, const Point& p1, const Point& p2, const Point& p3);
+        Triangle(const string& name, const Point& p1, const Point& p2, const Point& p3);
         double getPerimeter() override;
         string getInfo() override;
+        using Shape::getName;
 };
 
 #endif

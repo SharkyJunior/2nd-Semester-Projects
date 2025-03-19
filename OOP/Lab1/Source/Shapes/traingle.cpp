@@ -2,14 +2,13 @@
 #include <sstream>
 #include <iomanip>
 
-Triangle::Triangle(string name, const Point& p1, const Point& p2, const Point& p3) 
+Triangle::Triangle(const string& name, const Point& p1, const Point& p2, const Point& p3) 
     : Shape(name)
 {
     if (isCollinear(p1, p2, p3))
         throw invalid_argument("Error: Triangle vertices can't be collinear");
     if (p1 == p2 && p2 == p3)
         throw invalid_argument("Error: Verteces can't be identical");
-
 
     this->p1 = p1;
     this->p2 = p2;

@@ -3,7 +3,7 @@
 #include <sstream>
 #include <iomanip>
 
-Rectangle::Rectangle(string& name, const Point& point1, const Point& point2) 
+Rectangle::Rectangle(const string& name, const Point& point1, const Point& point2) 
     : Shape(name)
 {
     if (point1 == point2)
