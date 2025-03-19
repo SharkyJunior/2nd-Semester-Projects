@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "stdexcept": "cpp",
+        "string": "cpp",
+        "iostream": "cpp",
+        "map": "cpp",
+        "ios": "cpp",
+        "iomanip": "cpp"
+    },
+    "cmake.sourceDirectory": "/Users/sharkyjunior/Documents/2nd-Semester-Projects/OP/Base Converter (lab1)"
+}
