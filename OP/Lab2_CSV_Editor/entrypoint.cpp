@@ -6,7 +6,7 @@ void doInit();
 void doOperation(Operations operation, AppContext* context, AppParams* params) {
     switch (operation) {
     case Initialization:
-        doInit();
+        //doInit();
         break;
     };
 }

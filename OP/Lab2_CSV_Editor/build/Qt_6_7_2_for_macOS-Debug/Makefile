@@ -52,9 +52,13 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../../main.cpp \
+SOURCES       = ../../csv.cpp \
+		../../entrypoint.cpp \
+		../../main.cpp \
 		../../mainwindow.cpp moc_mainwindow.cpp
-OBJECTS       = main.o \
+OBJECTS       = csv.o \
+		entrypoint.o \
+		main.o \
 		mainwindow.o \
 		moc_mainwindow.o
 DIST          = /Applications/QT/6.7.2/macos/mkspecs/features/spec_pre.prf \
@@ -257,6 +261,7 @@ DIST          = /Applications/QT/6.7.2/macos/mkspecs/features/spec_pre.prf \
 		/Applications/QT/6.7.2/macos/mkspecs/features/qt_config.prf \
 		/Applications/QT/6.7.2/macos/mkspecs/macx-clang/qmake.conf \
 		/Applications/QT/6.7.2/macos/mkspecs/features/spec_post.prf \
+		../../.qmake.stash \
 		/Applications/QT/6.7.2/macos/mkspecs/features/exclusive_builds.prf \
 		/Applications/QT/6.7.2/macos/mkspecs/features/mac/sdk.prf \
 		/Applications/QT/6.7.2/macos/mkspecs/features/toolchain.prf \
@@ -288,7 +293,11 @@ DIST          = /Applications/QT/6.7.2/macos/mkspecs/features/spec_pre.prf \
 		/Applications/QT/6.7.2/macos/mkspecs/features/lex.prf \
 		../../../../Lab2_CSV_Editor.pro ../../appcontext.h \
 		../../consts.h \
-		../../mainwindow.h ../../main.cpp \
+		../../csv.h \
+		../../entrypoint.h \
+		../../mainwindow.h ../../csv.cpp \
+		../../entrypoint.cpp \
+		../../main.cpp \
 		../../mainwindow.cpp
 QMAKE_TARGET  = Lab2_CSV_Editor
 DESTDIR       = 
@@ -298,7 +307,7 @@ TARGET        = Lab2_CSV_Editor.app/Contents/MacOS/Lab2_CSV_Editor
 EXPORT_QMAKE_MAC_SDK = macosx
 EXPORT_QMAKE_MAC_SDK_VERSION = 15.2
 EXPORT_QMAKE_XCODE_DEVELOPER_PATH = /Library/Developer/CommandLineTools
-EXPORT__QMAKE_STASH_ = 
+EXPORT__QMAKE_STASH_ = /Users/sharkyjunior/Documents/2nd-Semester-Projects/OP/Lab2_CSV_Editor/build/Qt_6_7_2_for_macOS-Debug/.qmake.stash
 EXPORT_VALID_ARCHS = x86_64 arm64
 EXPORT_DEFAULT_ARCHS = arm64
 EXPORT_ARCHS = $(filter $(EXPORT_VALID_ARCHS), $(if $(ARCHS), $(ARCHS), $(if $(EXPORT_DEFAULT_ARCHS), $(EXPORT_DEFAULT_ARCHS), $(EXPORT_VALID_ARCHS))))
@@ -514,6 +523,7 @@ Makefile: ../../Lab2_CSV_Editor.pro /Applications/QT/6.7.2/macos/mkspecs/macx-cl
 		/Applications/QT/6.7.2/macos/mkspecs/features/qt_config.prf \
 		/Applications/QT/6.7.2/macos/mkspecs/macx-clang/qmake.conf \
 		/Applications/QT/6.7.2/macos/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/Applications/QT/6.7.2/macos/mkspecs/features/exclusive_builds.prf \
 		/Applications/QT/6.7.2/macos/mkspecs/features/mac/sdk.prf \
 		/Applications/QT/6.7.2/macos/mkspecs/features/toolchain.prf \
@@ -748,6 +758,7 @@ Makefile: ../../Lab2_CSV_Editor.pro /Applications/QT/6.7.2/macos/mkspecs/macx-cl
 /Applications/QT/6.7.2/macos/mkspecs/features/qt_config.prf:
 /Applications/QT/6.7.2/macos/mkspecs/macx-clang/qmake.conf:
 /Applications/QT/6.7.2/macos/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /Applications/QT/6.7.2/macos/mkspecs/features/exclusive_builds.prf:
 /Applications/QT/6.7.2/macos/mkspecs/features/mac/sdk.prf:
 /Applications/QT/6.7.2/macos/mkspecs/features/toolchain.prf:
@@ -805,8 +816,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents ../../appcontext.h ../../consts.h ../../mainwindow.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../../main.cpp ../../mainwindow.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../../appcontext.h ../../consts.h ../../csv.h ../../entrypoint.h ../../mainwindow.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../../csv.cpp ../../entrypoint.cpp ../../main.cpp ../../mainwindow.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../../mainwindow.ui $(DISTDIR)/
 
 
@@ -817,6 +828,7 @@ clean: compiler_clean
 
 distclean: clean 
 	-$(DEL_FILE) -r Lab2_CSV_Editor.app
+	-$(DEL_FILE) .qmake.stash
 	-$(DEL_FILE) Makefile
 
 
@@ -866,6 +878,17 @@ compiler_lex_clean:
 compiler_clean: compiler_moc_header_clean compiler_uic_clean 
 
 ####### Compile
+
+csv.o: ../../csv.cpp ../../csv.h \
+		../../consts.h \
+		../../appcontext.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o csv.o ../../csv.cpp
+
+entrypoint.o: ../../entrypoint.cpp ../../csv.h \
+		../../consts.h \
+		../../appcontext.h \
+		../../entrypoint.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o entrypoint.o ../../entrypoint.cpp
 
 main.o: ../../main.cpp ../../mainwindow.h \
 		/Applications/QT/6.7.2/macos/lib/QtWidgets.framework/Headers/QMainWindow \
