@@ -16,23 +16,20 @@ Triangle::Triangle(const string& name, const Point& p1, const Point& p2, const P
 }
 
 string Triangle::getInfo() {
-    Point points[3] = {p1, p2, p3};
     stringstream s;
     s << fixed << setprecision(2);
     s << "Triangle \"" << name << "\" with vertexes";
-    for (int i = 0; i < 2; i++)
-        s << " (" << points[i].getX() << ", " << points[i].getY() << "),";
-    s << " (" << points[2].getX() << ", " << points[2].getY() << ")";
+    s << p1 << p2 << p3;
     return s.str();
 }
 
 double Triangle::getPerimeter() {
-    Point points[3] = {p1, p2, p3};
     double perimeter = 0;
     int deltaX, deltaY;
 
-    for (int i = 0; i < 3; i++)
-        perimeter += getSideLength(points[i], points[(i+1)%3]);
+    perimeter += getSideLength(p1, p2);
+    perimeter += getSideLength(p2, p3);
+    perimeter += getSideLength(p1, p3);
 
     return perimeter;
 }

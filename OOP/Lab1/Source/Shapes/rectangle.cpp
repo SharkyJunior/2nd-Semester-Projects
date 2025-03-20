@@ -18,9 +18,8 @@ Rectangle::Rectangle(const string& name, const Point& point1, const Point& point
 string Rectangle::getInfo() {
     stringstream s;
     s << fixed << setprecision(2);
-    s << "Rectangle \"" << name << "\" with left upper corner at (" << point1.getX()
-        << ", " << point1.getY() << ") and right lower corner at (" 
-        << point2.getX() << ", " << point2.getY() << ")";
+    s << "Rectangle \"" << name << "\" with left upper corner at " << 
+        point1 << " and right lower corner at " << point2;
     return s.str();
 }
 

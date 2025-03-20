@@ -9,6 +9,7 @@ using namespace std;
 
 
 Application::Application() {
+    menuActions[0] = &Application::stop;
     menuActions[1] = &Application::addShape;
     menuActions[2] = &Application::printInfo;
     menuActions[3] = &Application::printPerimeters;
@@ -17,29 +18,27 @@ Application::Application() {
     menuActions[6] = &Application::deleteShape;
     menuActions[7] = &Application::deleteShapesByPerimeter;
 
+    shapeSelectors[1] = &Application::createCircle;
+    shapeSelectors[2] = &Application::createRectangle;
+    shapeSelectors[3] = &Application::createTriangle;
+
     isRunning = false;
 }
 
 
 void Application::run() {
-    isRunning = true;
     cout << fixed << setprecision(2);
-    int option = 1;
+    int option;
     string input;
 
+    isRunning = true;
     while (isRunning) {
         printMenu();
         try {
             option = readOption();
-            if (option == 0) {
-                stop();
-                continue;
-            }
-            auto it = menuActions.find(option);
-            if (it != menuActions.end())
-                (this->*(it->second))();
-            else
-                throw invalid_argument("\nError: No such option.\n");
+            if (menuActions[option] == nullptr)
+                throw "Error: No such option.";
+            (this->*menuActions[option])();
         }
         catch (const exception& e) {
             cout << endl << e.what() << endl;
@@ -56,16 +55,14 @@ Application::~Application() {
     shapes.clear();
 }
 
-void Application::addShape() 
-{
+void Application::addShape() {
     Shape* shape = readShape();
     shapes.push_back(shape);
 }
 
-void Application::printInfo() 
-{
+void Application::printInfo() {
     if (shapes.size() > 0) {
-        cout << "\nShape information:\n" << shapes.size();
+        cout << "\nShape information:\n";
         for (int i = 0; i < shapes.size(); i++)
             cout << to_string(i+1) + ". " + shapes[i]->getInfo() + "\n";
     }
@@ -97,6 +94,7 @@ void Application::sortByPerimeter() {
     sort(shapes.begin(), shapes.end());
 }
 
+
 void Application::deleteShape() {
     string input;
     cout << "\nInput shape number:\n> ";
@@ -122,7 +120,7 @@ void Application::deleteShapesByPerimeter() {
 
 unsigned Application::readOption() {
     string input;
-    int option;
+    unsigned option;
     bool valid = false;
     while (!valid) {
         try {
@@ -138,72 +136,16 @@ unsigned Application::readOption() {
 }
 
 Shape* Application::readShape() {
-    Shape* shape;
-    string input, name;
-    ShapeSelectorOptions opt;
+    Shape* shape = nullptr;
 
     cout << "\nChoose shape type:\n1 - Circle\n2 - Rectangle\n3 - Triangle\n";
-    opt = (ShapeSelectorOptions) readOption(); // add checks
+    int opt = readOption(); 
 
-    cout << "Input shape name:\n> ";
-    cin >> name;
-    if (opt == CIRCLE) {
-        double x, y, r;
-        cout << "Input center X:\n> ";
-        cin >> input;
-        x = stod(input);
-        cout << "Input center Y:\n> ";
-        cin >> input;
-        y = stod(input);
-        cout << "Input radius:\n> ";
-        cin >> input;
-        r = stod(input);
-        Point c = Point(x, y);
-        shape = new Circle(name, c, r);
-    }
-    else if (opt == RECTANGLE) {
-        double x1, x2, y1, y2;
-        cout << "Input first point X:\n> ";
-        cin >> input;
-        x1 = stod(input);
-        cout << "Input first point Y:\n> ";
-        cin >> input;
-        y1 = stod(input);
-        cout << "Input second point X:\n> ";
-        cin >> input;
-        x2 = stod(input);
-        cout << "Input second point Y:\n> ";
-        cin >> input;
-        y2 = stod(input);
-        Point c1 = Point(x1, y1), c2 = Point(x2, y2);
-        shape = new Rectangle(name, c1, c2);
-    }
-    else
-    {
-        double x1, x2, x3, y1, y2, y3;
-        cout << "Input first point X:\n> ";
-        cin >> input;
-        x1 = stod(input);
-        cout << "Input first point Y:\n> ";
-        cin >> input;
-        y1 = stod(input);
-        cout << "Input second point X:\n> ";
-        cin >> input;
-        x2 = stod(input);
-        cout << "Input second point Y:\n> ";
-        cin >> input;
-        y2 = stod(input);
-        cout << "Input third point X:\n> ";
-        cin >> input;
-        x3 = stod(input);
-        cout << "Input third point Y:\n> ";
-        cin >> input;
-        y3 = stod(input);
-        Point c1 = Point(x1, y1), c2 = Point(x2, y2), c3 = Point(x3, y3);
-        shape = new Triangle(name, c1, c2, c3);
-    }
+    shape = (this->*shapeSelectors[opt])();
+
     return shape;
 }
+
 
 void Application::printMenu() {
     cout << "\n<-- Menu -->\n1. Add shape to list\n2. Show list of shapes\n"
@@ -212,3 +154,23 @@ void Application::printMenu() {
         << "7. Delete shape above perimeter threshold\n0. Exit program\n";
 }
 
+Shape* Application::createCircle() {
+    cout << "Input name, center and radius:\n";
+    Shape* shape = new Circle();
+    cin >> *shape;
+    return shape;
+}
+
+Shape* Application::createRectangle() {
+    cout << "Input name and two corners:\n";
+    Shape* shape = new Rectangle();
+    cin >> *shape;
+    return shape;
+}
+
+Shape* Application::createTriangle() {
+    cout << "Input name and 3 verteces:\n";
+    Shape* shape = new Triangle();
+    cin >> *shape;
+    return shape;
+}

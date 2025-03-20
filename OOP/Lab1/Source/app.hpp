@@ -16,14 +16,9 @@ using namespace std;
 class Application {
     vector<Shape*> shapes;
     map<int, void (Application::*)()> menuActions;
+    map<int, Shape* (Application::*)()> shapeSelectors;
     bool isRunning;
-
-    enum ShapeSelectorOptions {
-        CIRCLE = 1,
-        RECTANGLE = 2,
-        TRIANGLE = 3
-    };
-
+    
     // menu actions
     void addShape();
     void printInfo();
@@ -32,6 +27,11 @@ class Application {
     void sortByPerimeter();
     void deleteShape();
     void deleteShapesByPerimeter();
+
+    // shape creators
+    Shape* createCircle();
+    Shape* createRectangle();
+    Shape* createTriangle();
 
     // utilities
     void printMenu();

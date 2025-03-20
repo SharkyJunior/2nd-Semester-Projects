@@ -3,7 +3,7 @@
 #include <iomanip>
 
 Circle::Circle(const string& name, const Point& center, double radius) 
-    : Shape::Shape(name)
+    : Shape(name)
 {
     if (radius <= 0)
         throw invalid_argument("Radius can't be negative");
@@ -14,8 +14,8 @@ Circle::Circle(const string& name, const Point& center, double radius)
 
 string Circle::getInfo() {
     stringstream s;
-    s << fixed << setprecision(2) << "Circle \"" << name << "\" with center at (" 
-        << center.getX() << ", " << center.getY() << ") and radius " << radius;
+    s << fixed << setprecision(2) << "Circle \"" << name 
+        << "\" with center at " << center << " and radius " << radius;
     return s.str();
 }
 

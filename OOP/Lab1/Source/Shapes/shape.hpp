@@ -8,6 +8,7 @@ using namespace std;
 class Shape {
     protected:
         string name;
+        virtual void input(istream& is) = 0;
 
     public:
         Shape(const string& name); 
@@ -16,6 +17,10 @@ class Shape {
         virtual string getName();
 
         bool operator<(Shape& a);
+        friend istream& operator>>(istream& is, Shape& a) {
+            a.input(is);
+            return is;
+        }
 };
 
 #endif
