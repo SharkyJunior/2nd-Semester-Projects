@@ -6,8 +6,8 @@
 
 enum Operations {
     Initialization,
-    OpenCSV,
-    LoadData,
+    SetPath,
+    LoadCSV,
     CalculateMetrics
 };
 

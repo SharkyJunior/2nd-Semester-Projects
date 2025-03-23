@@ -9,7 +9,8 @@ enum ErrorCode {
     FILE_NOT_OPENED,
     INVALID_INPUT,
     CALC_ERROR,
-    EMPTY_FILE
+    EMPTY_FILE,
+    NO_COLUMNS
 };
 
 enum FieldType {
@@ -18,25 +19,29 @@ enum FieldType {
     Double
 };
 
-struct Region {
-    int year;
-    char name[NAME_MAX_LEN];
-    double npg, birthRate, deathRate, gdw, urbanization;
-};
+// struct Region {
+//     int year;
+//     char name[NAME_MAX_LEN];
+//     double npg, birthRate, deathRate, gdw, urbanization;
+// };
 
 struct CSVData {
     char** columnNames;
-    FieldType* columnTypes;
     char*** data;
+    int columnCount, rowCount, errEntryCount;
+};
+
+struct Metrics {
+    double minValue, maxValue, medianValue;
 };
 
 struct AppContext {
-    FILE* file;
     int selectedColumn;
-    double minValue, maxValue, medianValue;
     char* filePath;
     char filterName[NAME_MAX_LEN];
-    Region* regions;
+    Metrics* metrics;
+    FILE* file;
+    CSVData* data;
 };
 
 #endif // APPCONTEXT_H
