@@ -19,15 +19,14 @@ enum FieldType {
     Double
 };
 
-// struct Region {
-//     int year;
-//     char name[NAME_MAX_LEN];
-//     double npg, birthRate, deathRate, gdw, urbanization;
-// };
+struct RowNode {
+    RowNode* next;
+    char** data;
+};
 
 struct CSVData {
     char** columnNames;
-    char*** data;
+    RowNode* head;
     int columnCount, rowCount, errEntryCount;
 };
 
@@ -37,8 +36,10 @@ struct Metrics {
 
 struct AppContext {
     int selectedColumn;
-    char* filePath;
-    char filterName[NAME_MAX_LEN];
+    char filePath[MAX_PATH_LEN];
+    char columnFilterName[NAME_MAX_LEN];
+    char filterValue[NAME_MAX_LEN];
+    ErrorCode errorCode;
     Metrics* metrics;
     FILE* file;
     CSVData* data;

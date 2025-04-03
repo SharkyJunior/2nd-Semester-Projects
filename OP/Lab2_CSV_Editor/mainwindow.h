@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "appcontext.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -19,7 +20,15 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    AppContext context;
+
+    // uitilies
+    void updateUi();
 
     // slots
+    void chooseFileButtonClicked();
+    void loadCsvButtonClicked();
 };
+
+
 #endif // MAINWINDOW_H

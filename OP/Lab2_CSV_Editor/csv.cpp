@@ -39,7 +39,7 @@ CSVData* readCsv(const char* filename, ErrorCode* err) {
             }
 
             // read data
-            data->data = (char***) malloc(DEFAULT_ROW_NUM * sizeof(char**));
+            //data->data = (char***) malloc(DEFAULT_ROW_NUM * sizeof(char**));
 
             parseData(data, file);
         }
@@ -52,13 +52,17 @@ CSVData* readCsv(const char* filename, ErrorCode* err) {
 
 void parseData(CSVData* data, FILE* file) {
     char buff[MAX_CSVLINE_LENGTH];
-    int rows = 0, errCnt = 0;
+    int rows = 0, errCnt = 0, dataAllocLen = DEFAULT_ROW_NUM;
     while (fgets(buff, sizeof(buff), file)) {
         buff[strcspn(buff, "\n")] = '\0';
 
         if (count(buff, ',') + 1 != data->columnCount)
             errCnt++;
         else {
+            if (rows >= dataAllocLen) {
+                data->data = (char***) realloc(data->data, dataAllocLen * 2 * sizeof(char**));
+                dataAllocLen *= 2;
+            }
             data->data[rows] = (char**) malloc(data->columnCount * sizeof(char*));
             for (int i = 0; i < data->columnCount; i++) {
                 char* token = strtok(buff, ",");

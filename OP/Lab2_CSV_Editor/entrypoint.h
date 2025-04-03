@@ -8,12 +8,13 @@ enum Operations {
     Initialization,
     SetPath,
     LoadCSV,
+    FilterCSV,
     CalculateMetrics
 };
 
 struct AppParams {
     int selectedColumn;
-    char* filePath;
+    char filePath[MAX_PATH_LEN];
     char filterName[NAME_MAX_LEN];
 };
 

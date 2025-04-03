@@ -4,7 +4,7 @@
 #include "appcontext.h"
 
 CSVData* readCsv(const char* filename, ErrorCode* err);
-CSVData* filterCsv(FILE* filestream, char* filterName);
+CSVData* filterCsv(CSVData* data, char* columnName, char* filterValue);
 double calcMinValue(CSVData* data, int column);
 double calcMaxValue(CSVData* data, int column);
 double calcMedianValue(CSVData* data, int column);

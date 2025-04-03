@@ -34,9 +34,9 @@ public:
     QWidget *centralwidget;
     QGridLayout *gridLayout;
     QHBoxLayout *horizontalLayout_2;
-    QPushButton *calcMetricsButton;
+    QPushButton *chooseFileButton;
     QPushButton *loadDataButton;
-    QPushButton *openCsvButton;
+    QPushButton *calcMetricsButton;
     QHBoxLayout *horizontalLayout_3;
     QSpacerItem *horizontalSpacer_9;
     QLabel *label;
@@ -79,20 +79,20 @@ public:
         gridLayout->setObjectName("gridLayout");
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setObjectName("horizontalLayout_2");
-        calcMetricsButton = new QPushButton(centralwidget);
-        calcMetricsButton->setObjectName("calcMetricsButton");
+        chooseFileButton = new QPushButton(centralwidget);
+        chooseFileButton->setObjectName("chooseFileButton");
 
-        horizontalLayout_2->addWidget(calcMetricsButton);
+        horizontalLayout_2->addWidget(chooseFileButton);
 
         loadDataButton = new QPushButton(centralwidget);
         loadDataButton->setObjectName("loadDataButton");
 
         horizontalLayout_2->addWidget(loadDataButton);
 
-        openCsvButton = new QPushButton(centralwidget);
-        openCsvButton->setObjectName("openCsvButton");
+        calcMetricsButton = new QPushButton(centralwidget);
+        calcMetricsButton->setObjectName("calcMetricsButton");
 
-        horizontalLayout_2->addWidget(openCsvButton);
+        horizontalLayout_2->addWidget(calcMetricsButton);
 
 
         gridLayout->addLayout(horizontalLayout_2, 0, 0, 1, 1);
@@ -255,9 +255,9 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "CSV Reader", nullptr));
+        chooseFileButton->setText(QCoreApplication::translate("MainWindow", "Choose file...", nullptr));
+        loadDataButton->setText(QCoreApplication::translate("MainWindow", "Load data from file", nullptr));
         calcMetricsButton->setText(QCoreApplication::translate("MainWindow", "Calculate Metrics", nullptr));
-        loadDataButton->setText(QCoreApplication::translate("MainWindow", "Load Data", nullptr));
-        openCsvButton->setText(QCoreApplication::translate("MainWindow", "Open CSV", nullptr));
         label->setText(QCoreApplication::translate("MainWindow", "Filter region:", nullptr));
         label_2->setText(QCoreApplication::translate("MainWindow", "Select column for metrics:", nullptr));
         label_6->setText(QCoreApplication::translate("MainWindow", "Metrics", nullptr));
