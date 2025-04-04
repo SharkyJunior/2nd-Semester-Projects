@@ -1,6 +1,7 @@
 #include "csv.h"
 
 #include "consts.h"
+#include "rownode.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,12 +17,13 @@ CSVData* readCsv(const char* filename, ErrorCode* err) {
         *err = FILE_NOT_OPENED;
     else {
         data  = (CSVData*) malloc(sizeof(CSVData));
+        data->head = NULL;
         char buff[MAX_CSVLINE_LENGTH];
 
         // read field names
 
         fgets(buff, MAX_CSVLINE_LENGTH, file);
-        buff[strcspn(buff, "\n")] = '\0';
+        buff[strcspn(buff, "\r\n")] = '\0';
 
         data->columnCount = count(buff, ',') + 1;
         if (data->columnCount == 1 && strlen(buff) < 1) {
@@ -33,13 +35,9 @@ CSVData* readCsv(const char* filename, ErrorCode* err) {
             int i = 0;
             char* token = strtok(buff, ",");
             while (token != NULL) {
-                token[strlen(token)] = '\0';
-                data->columnNames[i++] = token;
+                data->columnNames[i++] = strdup(token);
                 token = strtok(NULL, ",");
             }
-
-            // read data
-            //data->data = (char***) malloc(DEFAULT_ROW_NUM * sizeof(char**));
 
             parseData(data, file);
         }
@@ -52,35 +50,42 @@ CSVData* readCsv(const char* filename, ErrorCode* err) {
 
 void parseData(CSVData* data, FILE* file) {
     char buff[MAX_CSVLINE_LENGTH];
-    int rows = 0, errCnt = 0, dataAllocLen = DEFAULT_ROW_NUM;
+    int rows = 0, errCnt = 0;
+
+    RowNode* head = (RowNode*) malloc(sizeof(RowNode));
+    RowNode* cur = head;
+    cur->data = NULL;
+    cur->next = NULL;
     while (fgets(buff, sizeof(buff), file)) {
-        buff[strcspn(buff, "\n")] = '\0';
+        buff[strcspn(buff, "\r\n")] = '\0';
 
         if (count(buff, ',') + 1 != data->columnCount)
             errCnt++;
         else {
-            if (rows >= dataAllocLen) {
-                data->data = (char***) realloc(data->data, dataAllocLen * 2 * sizeof(char**));
-                dataAllocLen *= 2;
-            }
-            data->data[rows] = (char**) malloc(data->columnCount * sizeof(char*));
+            char** rowData = (char**) malloc(data->columnCount * sizeof(char*));
+            char* token = strtok(buff, ",");
             for (int i = 0; i < data->columnCount; i++) {
-                char* token = strtok(buff, ",");
-                int tokLen = strlen(token);
-                if (tokLen == 0) {
-                    free(data->data[rows]);
+                if (token == NULL || strlen(token) == 0) {
+                    for (int j = 0; j < i; j++) {
+                        free(rowData[j]);
+                    }
+                    free(rowData);
                     errCnt++;
                     break;
                 }
-                data->data[rows][i] = (char*) malloc((tokLen + 1) * sizeof(char));
-                strncpy(data->data[rows][i], token, tokLen + 1);
-                data->data[rows][i][tokLen] = '\0';
+                rowData[i] = strdup(token);
+                token = strtok(NULL, ",");
             }
-            if (data->data[rows] != NULL)
+            if (rowData != NULL) {
+                addNode(head, rowData);
                 rows++;
+            }
         }
     }
+    if (cur->data != NULL)
+        rows++;
 
+    data->head = head;
     data->rowCount = rows;
     data->errEntryCount = errCnt;
 }

@@ -12,14 +12,16 @@ SOURCES += \
     csv.cpp \
     entrypoint.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    rownode.cpp
 
 HEADERS += \
     appcontext.h \
     consts.h \
     csv.h \
     entrypoint.h \
-    mainwindow.h
+    mainwindow.h \
+    rownode.h
 
 FORMS += \
     mainwindow.ui

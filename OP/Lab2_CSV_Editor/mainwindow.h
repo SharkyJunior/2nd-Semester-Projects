@@ -22,12 +22,19 @@ private:
     Ui::MainWindow *ui;
     AppContext context;
 
-    // uitilies
+    // utilities
     void updateUi();
+    void updateTableWidget(const QString& filterName);
+    void updateTableInfo(const QString& filterName);
+    QStringList convToQStringList();
+    void handleErrorCode();
+    void showMessageBox(QString info);
 
     // slots
     void chooseFileButtonClicked();
     void loadCsvButtonClicked();
+    void filterRegionButtonClicked();
+    void calcMetricsButtonClicked();
 };
 
 

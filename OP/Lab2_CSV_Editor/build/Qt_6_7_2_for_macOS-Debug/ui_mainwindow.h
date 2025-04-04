@@ -33,15 +33,15 @@ class Ui_MainWindow
 public:
     QWidget *centralwidget;
     QGridLayout *gridLayout;
+    QHBoxLayout *horizontalLayout_3;
+    QSpacerItem *horizontalSpacer_9;
+    QPushButton *filterRegionButton;
+    QLineEdit *regionLineEdit;
+    QSpacerItem *horizontalSpacer_2;
     QHBoxLayout *horizontalLayout_2;
     QPushButton *chooseFileButton;
     QPushButton *loadDataButton;
     QPushButton *calcMetricsButton;
-    QHBoxLayout *horizontalLayout_3;
-    QSpacerItem *horizontalSpacer_9;
-    QLabel *label;
-    QLineEdit *regionLineEdit;
-    QSpacerItem *horizontalSpacer_2;
     QHBoxLayout *horizontalLayout_4;
     QSpacerItem *horizontalSpacer_10;
     QLabel *label_2;
@@ -65,6 +65,7 @@ public:
     QLabel *label_5;
     QLineEdit *medianValueOutputLine;
     QSpacerItem *horizontalSpacer_8;
+    QLabel *tableInfoLabel;
     QStatusBar *statusbar;
     QMenuBar *menubar;
 
@@ -77,6 +78,30 @@ public:
         centralwidget->setObjectName("centralwidget");
         gridLayout = new QGridLayout(centralwidget);
         gridLayout->setObjectName("gridLayout");
+        horizontalLayout_3 = new QHBoxLayout();
+        horizontalLayout_3->setObjectName("horizontalLayout_3");
+        horizontalSpacer_9 = new QSpacerItem(40, 20, QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Minimum);
+
+        horizontalLayout_3->addItem(horizontalSpacer_9);
+
+        filterRegionButton = new QPushButton(centralwidget);
+        filterRegionButton->setObjectName("filterRegionButton");
+
+        horizontalLayout_3->addWidget(filterRegionButton);
+
+        regionLineEdit = new QLineEdit(centralwidget);
+        regionLineEdit->setObjectName("regionLineEdit");
+        regionLineEdit->setMaxLength(200);
+
+        horizontalLayout_3->addWidget(regionLineEdit);
+
+        horizontalSpacer_2 = new QSpacerItem(40, 20, QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Minimum);
+
+        horizontalLayout_3->addItem(horizontalSpacer_2);
+
+
+        gridLayout->addLayout(horizontalLayout_3, 1, 0, 1, 1);
+
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setObjectName("horizontalLayout_2");
         chooseFileButton = new QPushButton(centralwidget);
@@ -97,30 +122,6 @@ public:
 
         gridLayout->addLayout(horizontalLayout_2, 0, 0, 1, 1);
 
-        horizontalLayout_3 = new QHBoxLayout();
-        horizontalLayout_3->setObjectName("horizontalLayout_3");
-        horizontalSpacer_9 = new QSpacerItem(40, 20, QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Minimum);
-
-        horizontalLayout_3->addItem(horizontalSpacer_9);
-
-        label = new QLabel(centralwidget);
-        label->setObjectName("label");
-
-        horizontalLayout_3->addWidget(label);
-
-        regionLineEdit = new QLineEdit(centralwidget);
-        regionLineEdit->setObjectName("regionLineEdit");
-        regionLineEdit->setMaxLength(200);
-
-        horizontalLayout_3->addWidget(regionLineEdit);
-
-        horizontalSpacer_2 = new QSpacerItem(40, 20, QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Minimum);
-
-        horizontalLayout_3->addItem(horizontalSpacer_2);
-
-
-        gridLayout->addLayout(horizontalLayout_3, 1, 0, 1, 1);
-
         horizontalLayout_4 = new QHBoxLayout();
         horizontalLayout_4->setObjectName("horizontalLayout_4");
         horizontalSpacer_10 = new QSpacerItem(40, 20, QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Minimum);
@@ -134,6 +135,7 @@ public:
 
         selectColumnSpinBox = new QSpinBox(centralwidget);
         selectColumnSpinBox->setObjectName("selectColumnSpinBox");
+        selectColumnSpinBox->setMinimum(1);
 
         horizontalLayout_4->addWidget(selectColumnSpinBox);
 
@@ -236,7 +238,13 @@ public:
         verticalLayout->addLayout(horizontalLayout_7);
 
 
-        gridLayout->addLayout(verticalLayout, 4, 0, 1, 1);
+        gridLayout->addLayout(verticalLayout, 5, 0, 1, 1);
+
+        tableInfoLabel = new QLabel(centralwidget);
+        tableInfoLabel->setObjectName("tableInfoLabel");
+        tableInfoLabel->setAlignment(Qt::AlignmentFlag::AlignCenter);
+
+        gridLayout->addWidget(tableInfoLabel, 4, 0, 1, 1);
 
         MainWindow->setCentralWidget(centralwidget);
         statusbar = new QStatusBar(MainWindow);
@@ -255,15 +263,16 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "CSV Reader", nullptr));
+        filterRegionButton->setText(QCoreApplication::translate("MainWindow", "Filter region:", nullptr));
         chooseFileButton->setText(QCoreApplication::translate("MainWindow", "Choose file...", nullptr));
         loadDataButton->setText(QCoreApplication::translate("MainWindow", "Load data from file", nullptr));
         calcMetricsButton->setText(QCoreApplication::translate("MainWindow", "Calculate Metrics", nullptr));
-        label->setText(QCoreApplication::translate("MainWindow", "Filter region:", nullptr));
         label_2->setText(QCoreApplication::translate("MainWindow", "Select column for metrics:", nullptr));
         label_6->setText(QCoreApplication::translate("MainWindow", "Metrics", nullptr));
         label_3->setText(QCoreApplication::translate("MainWindow", "Minimum Value", nullptr));
         label_4->setText(QCoreApplication::translate("MainWindow", "Maximum Value", nullptr));
         label_5->setText(QCoreApplication::translate("MainWindow", "Median", nullptr));
+        tableInfoLabel->setText(QString());
     } // retranslateUi
 
 };

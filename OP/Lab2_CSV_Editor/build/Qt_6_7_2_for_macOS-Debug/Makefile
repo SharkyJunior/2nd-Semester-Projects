@@ -55,11 +55,13 @@ OBJECTS_DIR   = ./
 SOURCES       = ../../csv.cpp \
 		../../entrypoint.cpp \
 		../../main.cpp \
-		../../mainwindow.cpp moc_mainwindow.cpp
+		../../mainwindow.cpp \
+		../../rownode.cpp moc_mainwindow.cpp
 OBJECTS       = csv.o \
 		entrypoint.o \
 		main.o \
 		mainwindow.o \
+		rownode.o \
 		moc_mainwindow.o
 DIST          = /Applications/QT/6.7.2/macos/mkspecs/features/spec_pre.prf \
 		/Applications/QT/6.7.2/macos/mkspecs/features/device_config.prf \
@@ -295,10 +297,12 @@ DIST          = /Applications/QT/6.7.2/macos/mkspecs/features/spec_pre.prf \
 		../../consts.h \
 		../../csv.h \
 		../../entrypoint.h \
-		../../mainwindow.h ../../csv.cpp \
+		../../mainwindow.h \
+		../../rownode.h ../../csv.cpp \
 		../../entrypoint.cpp \
 		../../main.cpp \
-		../../mainwindow.cpp
+		../../mainwindow.cpp \
+		../../rownode.cpp
 QMAKE_TARGET  = Lab2_CSV_Editor
 DESTDIR       = 
 TARGET        = Lab2_CSV_Editor.app/Contents/MacOS/Lab2_CSV_Editor
@@ -816,8 +820,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents ../../appcontext.h ../../consts.h ../../csv.h ../../entrypoint.h ../../mainwindow.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../../csv.cpp ../../entrypoint.cpp ../../main.cpp ../../mainwindow.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../../appcontext.h ../../consts.h ../../csv.h ../../entrypoint.h ../../mainwindow.h ../../rownode.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../../csv.cpp ../../entrypoint.cpp ../../main.cpp ../../mainwindow.cpp ../../rownode.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../../mainwindow.ui $(DISTDIR)/
 
 
@@ -853,6 +857,9 @@ compiler_moc_header_clean:
 moc_mainwindow.cpp: ../../mainwindow.h \
 		/Applications/QT/6.7.2/macos/lib/QtWidgets.framework/Headers/QMainWindow \
 		/Applications/QT/6.7.2/macos/lib/QtWidgets.framework/Headers/qmainwindow.h \
+		../../appcontext.h \
+		../../consts.h \
+		../../rownode.h \
 		/Applications/QT/6.7.2/macos/libexec/moc
 	/Applications/QT/6.7.2/macos/libexec/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -D__cplusplus=199711L -D__APPLE_CC__=6000 -D__clang__ -D__clang_major__=16 -D__clang_minor__=0 -D__clang_patchlevel__=0 -D__GNUC__=4 -D__GNUC_MINOR__=2 -D__GNUC_PATCHLEVEL__=1 -I/Applications/QT/6.7.2/macos/mkspecs/macx-clang -I/Users/sharkyjunior/Documents/2nd-Semester-Projects/OP/Lab2_CSV_Editor -I/Applications/QT/6.7.2/macos/lib/QtWidgets.framework/Headers -I/Applications/QT/6.7.2/macos/lib/QtGui.framework/Headers -I/Applications/QT/6.7.2/macos/lib/QtCore.framework/Headers -I. -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1 -I/Library/Developer/CommandLineTools/usr/lib/clang/16/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include -I/Library/Developer/CommandLineTools/usr/include -F/Applications/QT/6.7.2/macos/lib ../../mainwindow.h -o moc_mainwindow.cpp
 
@@ -880,19 +887,24 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 ####### Compile
 
 csv.o: ../../csv.cpp ../../csv.h \
+		../../appcontext.h \
 		../../consts.h \
-		../../appcontext.h
+		../../rownode.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o csv.o ../../csv.cpp
 
-entrypoint.o: ../../entrypoint.cpp ../../csv.h \
+entrypoint.o: ../../entrypoint.cpp ../../entrypoint.h \
 		../../consts.h \
 		../../appcontext.h \
-		../../entrypoint.h
+		../../rownode.h \
+		../../csv.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o entrypoint.o ../../entrypoint.cpp
 
 main.o: ../../main.cpp ../../mainwindow.h \
 		/Applications/QT/6.7.2/macos/lib/QtWidgets.framework/Headers/QMainWindow \
 		/Applications/QT/6.7.2/macos/lib/QtWidgets.framework/Headers/qmainwindow.h \
+		../../appcontext.h \
+		../../consts.h \
+		../../rownode.h \
 		/Applications/QT/6.7.2/macos/lib/QtWidgets.framework/Headers/QApplication \
 		/Applications/QT/6.7.2/macos/lib/QtWidgets.framework/Headers/qapplication.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../../main.cpp
@@ -900,8 +912,19 @@ main.o: ../../main.cpp ../../mainwindow.h \
 mainwindow.o: ../../mainwindow.cpp ../../mainwindow.h \
 		/Applications/QT/6.7.2/macos/lib/QtWidgets.framework/Headers/QMainWindow \
 		/Applications/QT/6.7.2/macos/lib/QtWidgets.framework/Headers/qmainwindow.h \
-		ui_mainwindow.h
+		../../appcontext.h \
+		../../consts.h \
+		../../rownode.h \
+		ui_mainwindow.h \
+		/Applications/QT/6.7.2/macos/lib/QtWidgets.framework/Headers/QFileDialog \
+		/Applications/QT/6.7.2/macos/lib/QtWidgets.framework/Headers/qfiledialog.h \
+		/Applications/QT/6.7.2/macos/lib/QtWidgets.framework/Headers/QMessageBox \
+		/Applications/QT/6.7.2/macos/lib/QtWidgets.framework/Headers/qmessagebox.h \
+		../../entrypoint.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../../mainwindow.cpp
+
+rownode.o: ../../rownode.cpp ../../rownode.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o rownode.o ../../rownode.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp

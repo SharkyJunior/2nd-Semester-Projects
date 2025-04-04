@@ -13,7 +13,7 @@ enum Operations {
 };
 
 struct AppParams {
-    int selectedColumn;
+    int selectedColumn, filteredRowsCount;
     char filePath[MAX_PATH_LEN];
     char filterName[NAME_MAX_LEN];
 };
