@@ -7,7 +7,7 @@ RowNode* addNode(RowNode* head, char** data) {
         cur = cur->next;
 
     cur->next = (RowNode*) malloc(sizeof(RowNode));
-    cur->next->data = datab;;
+    cur->next->data = data;
     cur->next->next = NULL;
 
     return cur->next;

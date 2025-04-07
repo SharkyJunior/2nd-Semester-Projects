@@ -77,7 +77,10 @@ void parseData(CSVData* data, FILE* file) {
                 token = strtok(NULL, ",");
             }
             if (rowData != NULL) {
-                addNode(head, rowData);
+                if (head->data == NULL)
+                    head->data = rowData;
+                else
+                    addNode(head, rowData);
                 rows++;
             }
         }

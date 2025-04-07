@@ -1,6 +1,8 @@
 #ifndef ROWNODE_H
 #define ROWNODE_H
 
+#include <stdlib.h>
+
 struct RowNode {
     RowNode* next;
     char** data;
