@@ -80,7 +80,7 @@ void parseData(CSVData* data, FILE* file) {
                 if (head->data == NULL)
                     head->data = rowData;
                 else
-                    addNode(head, rowData);
+                    cur = addNode(cur, rowData);
                 rows++;
             }
         }

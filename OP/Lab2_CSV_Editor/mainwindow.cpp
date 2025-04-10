@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->dataTableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     connect(ui->chooseFileButton, &QAbstractButton::clicked, this, &MainWindow::chooseFileButtonClicked);
     connect(ui->loadDataButton, &QAbstractButton::clicked, this, &MainWindow::loadCsvButtonClicked);
@@ -32,7 +33,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::updateUi() {
     QString filterName = ui->regionLineEdit->text();
-    ui->selectColumnSpinBox->setMaximum(context.data->columnCount);
+    if (context.data->columnCount > 0)
+        ui->selectColumnSpinBox->setMaximum(context.data->columnCount);
+    else
+        ui->selectColumnSpinBox->setMaximum(1);
+
     if (context.data->rowCount > 0) {
         updateTableWidget(filterName);
         updateTableInfo(filterName);
@@ -119,11 +124,11 @@ void MainWindow::filterRegionButtonClicked() {
     strncpy(params.filterName, array.data(), array.size());
     params.filterName[array.size()] = '\0';
 
-    updateUi();
-
     params.filteredRowsCount = ui->dataTableWidget->rowCount();
 
     doOperation(FilterCSV, &context, &params);
+
+    updateUi();
 }
 
 void MainWindow::calcMetricsButtonClicked() {
@@ -159,9 +164,14 @@ void MainWindow::showMessageBox(QString info) {
 }
 
 void MainWindow::handleErrorCode() {
+    if (context.errorCode != OK)
+        showMessageBox(getErrorInfo(context.errorCode));
+}
+
+QString MainWindow::getErrorInfo(const ErrorCode err) {
     QString info;
 
-    switch (context.errorCode) {
+    switch (err) {
     case OK:
         info = "OK";
         break;
@@ -186,11 +196,13 @@ void MainWindow::handleErrorCode() {
     case BAD_COLUMN:
         info = "Invalid column number for calculating!";
         break;
+    case BAD_METRICS_VALUE:
+        info = "Value error (possibly not a number)!";
+        break;
     default:
         info = "Unexpected error!";
         break;
     }
 
-    if (context.errorCode != OK)
-        showMessageBox(info);
+    return info;
 }

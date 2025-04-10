@@ -13,7 +13,8 @@ enum ErrorCode {
     CALC_ERROR,
     EMPTY_FILE,
     NO_COLUMNS,
-    BAD_COLUMN
+    BAD_COLUMN,
+    BAD_METRICS_VALUE
 };
 
 enum FieldType {

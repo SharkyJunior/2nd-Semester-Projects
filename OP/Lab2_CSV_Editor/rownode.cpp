@@ -1,16 +1,12 @@
 #include "rownode.h"
 #include <stdlib.h>
 
-RowNode* addNode(RowNode* head, char** data) {
-    RowNode* cur = head;
-    while (cur->next != NULL)
-        cur = cur->next;
+RowNode* addNode(RowNode* tail, char** data) {
+    tail->next = (RowNode*) malloc(sizeof(RowNode));
+    tail->next->data = data;
+    tail->next->next = NULL;
 
-    cur->next = (RowNode*) malloc(sizeof(RowNode));
-    cur->next->data = data;
-    cur->next->next = NULL;
-
-    return cur->next;
+    return tail->next;
 }
 
 void removeNode(RowNode* head, RowNode* node) {
@@ -21,6 +17,5 @@ void removeNode(RowNode* head, RowNode* node) {
     RowNode* connectTo = node->next;
     cur->next = connectTo;
 
-    free(node->data);
     free(node);
 }

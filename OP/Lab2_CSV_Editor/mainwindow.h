@@ -28,6 +28,7 @@ private:
     void updateTableInfo(const QString& filterName);
     QStringList convToQStringList();
     void handleErrorCode();
+    QString getErrorInfo(const ErrorCode err);
     void showMessageBox(QString info);
 
     // slots

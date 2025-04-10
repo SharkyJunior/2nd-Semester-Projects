@@ -2,6 +2,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <errno.h>
 #include "consts.h"
 #include "csv.h"
 #include "appcontext.h"
@@ -31,7 +32,7 @@ void doOperation(Operations operation, AppContext* context, AppParams* params) {
         context->filteredRowsCount = params->filteredRowsCount;
         break;
     case CalculateMetrics:
-        if (params->selectedColumn > 0 && params->selectedColumn < context->data->columnCount) {
+        if (params->selectedColumn > 0 && params->selectedColumn <= context->data->columnCount) {
             context->selectedColumn = params->selectedColumn;
             calculateMetrics(context);
         }
@@ -44,6 +45,8 @@ void doOperation(Operations operation, AppContext* context, AppParams* params) {
 void doInit(AppContext* context) {
     context->metrics = (Metrics*) calloc(1, sizeof(Metrics));
     context->errorCode = OK;
+    context->selectedColumn = 1;
+    context->filteredRowsCount = 0;
 }
 
 void doReadCsv(AppContext* context) {
@@ -72,8 +75,13 @@ void calculateMetrics(AppContext* context) {
 
     while (cur != NULL) {
         if (!strcmp(context->filterName, "") || !strcmp(cur->data[REGION_COL], context->filterName)) {
-            double val = strtod(cur->data[context->selectedColumn - 1], NULL);
-            if (val < min)
+            char* endptr = NULL;
+            double val = strtod(cur->data[context->selectedColumn - 1], &endptr);
+            if (errno != 0 && endptr == cur->data[i]) {
+                context->errorCode = BAD_METRICS_VALUE;
+                break;
+            }
+            else if (val < min)
                 min = val;
             else if (val > max)
                 max = val;
@@ -83,14 +91,16 @@ void calculateMetrics(AppContext* context) {
         cur = cur->next;
     }
 
-    qsort(tempArr, i, sizeof(double), cmp);
-    median = tempArr[i / 2];
+    if (context->errorCode == OK) {
+        qsort(tempArr, i, sizeof(double), cmp);
+        median = tempArr[i / 2];
+
+        context->metrics->minValue = min;
+        context->metrics->maxValue = max;
+        context->metrics->medianValue = median;
+    }
 
     free(tempArr);
-
-    context->metrics->minValue = min;
-    context->metrics->maxValue = max;
-    context->metrics->medianValue = median;
 }
 
 int cmp(const void* a, const void* b) {

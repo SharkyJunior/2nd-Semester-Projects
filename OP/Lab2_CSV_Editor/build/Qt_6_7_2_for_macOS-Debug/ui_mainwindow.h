@@ -136,6 +136,7 @@ public:
         selectColumnSpinBox = new QSpinBox(centralwidget);
         selectColumnSpinBox->setObjectName("selectColumnSpinBox");
         selectColumnSpinBox->setMinimum(1);
+        selectColumnSpinBox->setValue(1);
 
         horizontalLayout_4->addWidget(selectColumnSpinBox);
 
@@ -148,6 +149,13 @@ public:
 
         dataTableWidget = new QTableWidget(centralwidget);
         dataTableWidget->setObjectName("dataTableWidget");
+        dataTableWidget->setEnabled(true);
+        dataTableWidget->setSizeAdjustPolicy(QAbstractScrollArea::SizeAdjustPolicy::AdjustIgnored);
+        dataTableWidget->setEditTriggers(QAbstractItemView::EditTrigger::NoEditTriggers);
+        dataTableWidget->horizontalHeader()->setCascadingSectionResizes(false);
+        dataTableWidget->horizontalHeader()->setStretchLastSection(false);
+        dataTableWidget->verticalHeader()->setCascadingSectionResizes(false);
+        dataTableWidget->verticalHeader()->setStretchLastSection(false);
 
         gridLayout->addWidget(dataTableWidget, 3, 0, 1, 1);
 
