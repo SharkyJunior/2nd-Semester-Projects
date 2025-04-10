@@ -1,10 +1,12 @@
 #include <exception>
 #include "iterator.hpp"
 
+using namespace std;
+
 template <typename T>
 Iterator<T>::Iterator(set<T> iterable) {
     if (iterable == NULL)
-        throw std::exception("Container is empty");
+        throw "Container is empty";
     this->container_obj = &iterable;
 }
 

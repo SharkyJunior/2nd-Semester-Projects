@@ -3,18 +3,22 @@
 
 #include "iterator.hpp"
 
+using namespace std;
+
 template <typename T>
 class set {
     T* array;
+    size_t size;
+    size_t capacity;
 
     public:
     // constructors & destructor
         set();
-        set<T>(T* arr);
+        set(T* arr);
         set(const set<T> &obj);
         set (set <T>&& s);
-        explicit set(std::initializer_list<T> lst);
-        ~set();
+        explicit set(initializer_list<T> lst);
+        ~set() = default;
 
     // methods
         int get_length() const;
@@ -23,20 +27,20 @@ class set {
         void remove(const T& elem);
         T* to_array();
 
-        set<T>& union(const set<T>& s);
+        set<T>& sunion(const set<T>& s);
         set<T>& intersection(const set<T>& s);
         set<T>& difference(const set<T>& s);
 
-        Iterator<T> iterator_begin();
-        Iterator<T> iterator_end();
+        Iterator<T> begin();
+        Iterator<T> end();
 
         void clear();
 
     // operator overloads
-        set<T>& operator=(const set<T> &obj);
+        set<T>& operator =(const set<T> &obj);
 
         template<typename _T>friend 
-        std::ostream& operator <<(std::ostream& os, const set<_T>& lst);
+        ostream& operator <<(ostream& os, const set<_T>& lst);
 
         set<T>& operator +=(const set<T>& s);
         set<T>& operator *=(const set<T>& s);
