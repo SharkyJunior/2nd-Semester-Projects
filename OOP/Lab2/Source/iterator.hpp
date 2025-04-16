@@ -4,17 +4,12 @@
 
 template <typename T>
 class Iterator {
-    T* container_obj;
-
     public:
-        Iterator(set<T> iterable);
-        void next();
-        T value();
-        bool is_end();
-        Iterator<T> operator++();
-        T operator*();
-        bool operator ==(Iterator<T> &b);
-        bool operator !=(Iterator<T> &b);
+        virtual ~Iterator() = default;
+        virtual void next() = 0;
+        virtual T value() = 0;
+        virtual bool is_end() = 0;
+        virtual T operator*() = 0;
 };
 
 #endif
