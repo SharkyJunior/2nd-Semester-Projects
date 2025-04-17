@@ -4,7 +4,7 @@
 #include <iostream>
 
 int main() {
-    set<int> s1 = set<int>();
+    set<int> s1 {};
 
     int arr1[5] {1, 2, 2, 3, 4};
     set<int> s2 = set<int>(arr1, 5);

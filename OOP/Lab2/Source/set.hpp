@@ -21,7 +21,7 @@ class set {
 
     public:
     // constructors & destructor
-        set() : size(0), capacity(DEFAULT_CAPACITY) { this->array = NULL; }
+        set() : size(0), capacity(DEFAULT_CAPACITY) { this->array = new T[capacity]; }
         set(T* arr, size_t length)
             : capacity(length)
         {  
@@ -53,7 +53,7 @@ class set {
         ~set() = default;
 
     // methods
-        int get_length() const{
+        int get_length() const {
             return size;
         }
         bool contains(const T& elem) const{
@@ -116,9 +116,19 @@ class set {
         set<T> difference(const set<T>& s) {
             set<T> result;
 
-            for (int i = 0; i < size; i++)
-                if (!s.contains(array[i]))
-                    result.add(array[i]);
+            SetIterator<T> it = this->begin();
+            while (!it.is_end()) {
+                if (!s.contains(it.value()))
+                    result.add(it.value());
+                ++it;
+            }
+
+            SetIterator<T> it2 = s.begin();
+            while (!it2.is_end()) {
+                if (!contains(it2.value()))
+                    result.add(it2.value());
+                ++it2;
+            }
 
             return result;
         }
@@ -169,8 +179,7 @@ class set {
         ostream& operator <<(ostream& os, const set<_T>& lst)
         {
             SetIterator<_T> it = lst.begin();
-            SetIterator<_T> end = lst.end();
-            while (it != end) {
+            while (!it.is_end()) {
                 os << it.value() << " ";
                 ++it;
             }
@@ -216,24 +225,29 @@ class set {
 
 template <typename T>
 class SetIterator : public Iterator<T> {
-    const set<T>& container;
-    size_t index;
+    T* container;
+    size_t len, index;
 
     public:
         SetIterator(const set<T>& iterable, size_t index = 0) 
-            : container(iterable), index(index) {}
+            : container(iterable.to_array()), index(index), len(iterable.get_length()) {}
+        
+        ~SetIterator() {
+            delete[] container;
+        }
+
         void next() override {
-            if (index >= container.get_length())
+            if (index >= len)
                 throw out_of_range("Iterator out of bounds");
             ++index;
         }
         T value() override {
-            if (index >= container.get_length())
+            if (index >= len)
                 throw out_of_range("Iterator is at end");
-            return container.to_array()[index];
+            return container[index];
         }
         bool is_end() override {
-            return index >= container.get_length();
+            return len == 0 || index >= len;
         }
         SetIterator<T>& operator++() {
             this->next();
@@ -243,15 +257,14 @@ class SetIterator : public Iterator<T> {
         T operator*() override {
             return this->value();
         }
+
         bool operator ==(SetIterator<T> &b) {
             const SetIterator<T>* otherIt = dynamic_cast<const SetIterator<T>*>(&b);
             if (!otherIt)
                 return false;
             return (this->container == otherIt->container) && (this->index == otherIt->index);
         }
-        bool operator !=(SetIterator<T> &b) {
-            return !(*this == b);
-        }
+        bool operator !=(SetIterator<T> &b);
 }; 
 
 #endif
