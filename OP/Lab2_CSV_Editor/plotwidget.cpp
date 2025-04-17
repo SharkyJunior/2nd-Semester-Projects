@@ -11,8 +11,14 @@ PlotWidget::PlotWidget(QWidget* parent)
 
 void PlotWidget::setupUi() {
     resize(PLOT_WINDOW_WIDTH, PLOT_WINDOW_HEIGHT);
+}
 
-    QPixmap* pix = new QPixmap();
+void PlotWidget::paintAxles() {
+    QPainter painter = QPainter(this);
 
-    QLayout layout = new QLayout();
+    QPen pen;
+    pen.setColor(QColor(Qt::GlobalColor::white));
+    painter.setPen(pen);
+
+    painter.drawLine(QPoint(100, 100), QPoint(100, ))
 }
