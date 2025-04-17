@@ -56,13 +56,17 @@ SOURCES       = ../../csv.cpp \
 		../../entrypoint.cpp \
 		../../main.cpp \
 		../../mainwindow.cpp \
-		../../rownode.cpp moc_mainwindow.cpp
+		../../plotwidget.cpp \
+		../../rownode.cpp moc_mainwindow.cpp \
+		moc_plotwidget.cpp
 OBJECTS       = csv.o \
 		entrypoint.o \
 		main.o \
 		mainwindow.o \
+		plotwidget.o \
 		rownode.o \
-		moc_mainwindow.o
+		moc_mainwindow.o \
+		moc_plotwidget.o
 DIST          = /Applications/QT/6.7.2/macos/mkspecs/features/spec_pre.prf \
 		/Applications/QT/6.7.2/macos/mkspecs/features/device_config.prf \
 		/Applications/QT/6.7.2/macos/mkspecs/common/unix.conf \
@@ -298,10 +302,12 @@ DIST          = /Applications/QT/6.7.2/macos/mkspecs/features/spec_pre.prf \
 		../../csv.h \
 		../../entrypoint.h \
 		../../mainwindow.h \
+		../../plotwidget.h \
 		../../rownode.h ../../csv.cpp \
 		../../entrypoint.cpp \
 		../../main.cpp \
 		../../mainwindow.cpp \
+		../../plotwidget.cpp \
 		../../rownode.cpp
 QMAKE_TARGET  = Lab2_CSV_Editor
 DESTDIR       = 
@@ -820,8 +826,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents ../../appcontext.h ../../consts.h ../../csv.h ../../entrypoint.h ../../mainwindow.h ../../rownode.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../../csv.cpp ../../entrypoint.cpp ../../main.cpp ../../mainwindow.cpp ../../rownode.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../../appcontext.h ../../consts.h ../../csv.h ../../entrypoint.h ../../mainwindow.h ../../plotwidget.h ../../rownode.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../../csv.cpp ../../entrypoint.cpp ../../main.cpp ../../mainwindow.cpp ../../plotwidget.cpp ../../rownode.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../../mainwindow.ui $(DISTDIR)/
 
 
@@ -851,9 +857,9 @@ benchmark: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: moc_mainwindow.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_plotwidget.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp
+	-$(DEL_FILE) moc_mainwindow.cpp moc_plotwidget.cpp
 moc_mainwindow.cpp: ../../mainwindow.h \
 		/Applications/QT/6.7.2/macos/lib/QtWidgets.framework/Headers/QMainWindow \
 		/Applications/QT/6.7.2/macos/lib/QtWidgets.framework/Headers/qmainwindow.h \
@@ -862,6 +868,17 @@ moc_mainwindow.cpp: ../../mainwindow.h \
 		../../rownode.h \
 		/Applications/QT/6.7.2/macos/libexec/moc
 	/Applications/QT/6.7.2/macos/libexec/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -D__cplusplus=199711L -D__APPLE_CC__=6000 -D__clang__ -D__clang_major__=16 -D__clang_minor__=0 -D__clang_patchlevel__=0 -D__GNUC__=4 -D__GNUC_MINOR__=2 -D__GNUC_PATCHLEVEL__=1 -I/Applications/QT/6.7.2/macos/mkspecs/macx-clang -I/Users/sharkyjunior/Documents/2nd-Semester-Projects/OP/Lab2_CSV_Editor -I/Applications/QT/6.7.2/macos/lib/QtWidgets.framework/Headers -I/Applications/QT/6.7.2/macos/lib/QtGui.framework/Headers -I/Applications/QT/6.7.2/macos/lib/QtCore.framework/Headers -I. -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1 -I/Library/Developer/CommandLineTools/usr/lib/clang/16/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include -I/Library/Developer/CommandLineTools/usr/include -F/Applications/QT/6.7.2/macos/lib ../../mainwindow.h -o moc_mainwindow.cpp
+
+moc_plotwidget.cpp: ../../plotwidget.h \
+		/Applications/QT/6.7.2/macos/lib/QtGui.framework/Headers/QPainter \
+		/Applications/QT/6.7.2/macos/lib/QtGui.framework/Headers/qpainter.h \
+		/Applications/QT/6.7.2/macos/lib/QtWidgets.framework/Headers/QWidget \
+		/Applications/QT/6.7.2/macos/lib/QtWidgets.framework/Headers/qwidget.h \
+		../../rownode.h \
+		../../appcontext.h \
+		../../consts.h \
+		/Applications/QT/6.7.2/macos/libexec/moc
+	/Applications/QT/6.7.2/macos/libexec/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -D__cplusplus=199711L -D__APPLE_CC__=6000 -D__clang__ -D__clang_major__=16 -D__clang_minor__=0 -D__clang_patchlevel__=0 -D__GNUC__=4 -D__GNUC_MINOR__=2 -D__GNUC_PATCHLEVEL__=1 -I/Applications/QT/6.7.2/macos/mkspecs/macx-clang -I/Users/sharkyjunior/Documents/2nd-Semester-Projects/OP/Lab2_CSV_Editor -I/Applications/QT/6.7.2/macos/lib/QtWidgets.framework/Headers -I/Applications/QT/6.7.2/macos/lib/QtGui.framework/Headers -I/Applications/QT/6.7.2/macos/lib/QtCore.framework/Headers -I. -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1 -I/Library/Developer/CommandLineTools/usr/lib/clang/16/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include -I/Library/Developer/CommandLineTools/usr/include -F/Applications/QT/6.7.2/macos/lib ../../plotwidget.h -o moc_plotwidget.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -920,14 +937,32 @@ mainwindow.o: ../../mainwindow.cpp ../../mainwindow.h \
 		/Applications/QT/6.7.2/macos/lib/QtWidgets.framework/Headers/qfiledialog.h \
 		/Applications/QT/6.7.2/macos/lib/QtWidgets.framework/Headers/QMessageBox \
 		/Applications/QT/6.7.2/macos/lib/QtWidgets.framework/Headers/qmessagebox.h \
-		../../entrypoint.h
+		../../entrypoint.h \
+		../../plotwidget.h \
+		/Applications/QT/6.7.2/macos/lib/QtGui.framework/Headers/QPainter \
+		/Applications/QT/6.7.2/macos/lib/QtGui.framework/Headers/qpainter.h \
+		/Applications/QT/6.7.2/macos/lib/QtWidgets.framework/Headers/QWidget \
+		/Applications/QT/6.7.2/macos/lib/QtWidgets.framework/Headers/qwidget.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../../mainwindow.cpp
+
+plotwidget.o: ../../plotwidget.cpp ../../plotwidget.h \
+		/Applications/QT/6.7.2/macos/lib/QtGui.framework/Headers/QPainter \
+		/Applications/QT/6.7.2/macos/lib/QtGui.framework/Headers/qpainter.h \
+		/Applications/QT/6.7.2/macos/lib/QtWidgets.framework/Headers/QWidget \
+		/Applications/QT/6.7.2/macos/lib/QtWidgets.framework/Headers/qwidget.h \
+		../../rownode.h \
+		../../appcontext.h \
+		../../consts.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o plotwidget.o ../../plotwidget.cpp
 
 rownode.o: ../../rownode.cpp ../../rownode.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o rownode.o ../../rownode.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
+
+moc_plotwidget.o: moc_plotwidget.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_plotwidget.o moc_plotwidget.cpp
 
 ####### Install
 

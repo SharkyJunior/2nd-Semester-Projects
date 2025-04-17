@@ -7,6 +7,7 @@
 #include <math.h>
 #include "entrypoint.h"
 #include "appcontext.h"
+#include "plotwidget.h"
 
 
 
@@ -145,6 +146,9 @@ void MainWindow::calcMetricsButtonClicked() {
     }
     else
         handleErrorCode();
+
+    PlotWidget* plot = new PlotWidget();
+    plot->show();
 }
 
 QStringList MainWindow::convToQStringList() {

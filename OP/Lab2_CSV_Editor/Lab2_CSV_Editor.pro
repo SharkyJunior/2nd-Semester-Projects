@@ -13,6 +13,7 @@ SOURCES += \
     entrypoint.cpp \
     main.cpp \
     mainwindow.cpp \
+    plotwidget.cpp \
     rownode.cpp
 
 HEADERS += \
@@ -21,6 +22,7 @@ HEADERS += \
     csv.h \
     entrypoint.h \
     mainwindow.h \
+    plotwidget.h \
     rownode.h
 
 FORMS += \
