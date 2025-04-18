@@ -4,24 +4,24 @@
 #include <iostream>
 
 int main() {
-    set<int> s1 {};
+    Set<int> s1 {};
 
     int arr1[5] {1, 2, 2, 3, 4};
-    set<int> s2 = set<int>(arr1, 5);
+    Set<int> s2 = Set<int>(arr1, 5);
     int arr2[3] {3, 4, 5};
-    set<int> s3 = set<int>(arr2, 3);
+    Set<int> s3 = Set<int>(arr2, 3);
 
-    set<int> s4 {2, 5, 6, 7, 8, 9};
+    Set<int> s4 {2, 5, 6, 7, 8, 9};
 
-    vector< set<int> > vec {s1, s2, s3, s4};
+    vector< Set<int> > vec {s1, s2, s3, s4};
 
-    cout << "sets:\n";
+    cout << "Sets:\n";
     for (int i = 0; i < 4; i++)
         cout << "s" << i+1 << ": " << vec[i] << endl;
 
     cout << endl << "lengths: \n";
     for (int i = 0; i < 4; i++)
-        cout << vec[i].get_length() << ", ";
+        cout << vec[i].getLength() << ", ";
 
     int elem = 2;
     cout << endl << "\"" << elem << "\" included: ";
@@ -34,7 +34,7 @@ int main() {
     vec[3].remove(9);
     cout << "Removed 9 from s4: " << vec[3] << endl;
 
-    cout << "sets:\n";
+    cout << "Sets:\n";
     for (int i = 0; i < 4; i++)
         cout << "s" << i+1 << ": " << vec[i] << endl;
 
@@ -44,7 +44,7 @@ int main() {
 
     cout << "Difference of s2 and s3: " << vec[1].difference(vec[2]) << endl;
 
-    set<int> s5 = s4;
+    Set<int> s5 = s4;
     cout << "Copied s4 to s5: " << s5 << endl;
 
 

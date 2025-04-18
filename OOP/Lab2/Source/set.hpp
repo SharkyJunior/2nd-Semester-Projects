@@ -1,10 +1,8 @@
-#ifndef SET_H
-#define SET_H
+//#include "set.h"
 
 #include "iterator.hpp"
 #include <initializer_list>
 #include <iostream>
-#include <initializer_list>
 
 #define DEFAULT_CAPACITY 16
 
@@ -14,15 +12,17 @@ template <typename T>
 class SetIterator;
 
 template <typename T>
-class set {
+class Set {
     T* array;
     size_t size;
     size_t capacity;
 
+    friend T& SetIterator<T>::value();
+
     public:
     // constructors & destructor
-        set() : size(0), capacity(DEFAULT_CAPACITY) { this->array = new T[capacity]; }
-        set(T* arr, size_t length)
+        Set() : size(0), capacity(DEFAULT_CAPACITY) { this->array = new T[capacity]; }
+        Set(T* arr, size_t length)
             : capacity(length)
         {  
             array = new T[length]; 
@@ -31,7 +31,7 @@ class set {
                     add(arr[i]);
         }
         
-        set(const set<T> &obj)
+        Set(const Set<T> &obj)
             : size(obj.size), capacity(obj.capacity), array(nullptr)
         {
             if (capacity > 0) {
@@ -41,8 +41,13 @@ class set {
             else
                 size = 0;
         }
-        set (set <T>&& s);
-        explicit set(initializer_list<T> lst)
+        Set (Set <T>&& s) 
+            : size(s.size), capacity(s.capacity)
+        {
+            array = s.array;
+            s.array = NULL;
+        }
+        explicit Set(initializer_list<T> lst)
             : capacity(lst.size())
         {
             array = new T[capacity];
@@ -50,10 +55,10 @@ class set {
                 if (!contains(i))
                     add(i);
         }
-        ~set() = default;
+        ~Set() = default;
 
     // methods
-        int get_length() const {
+        int getLength() const {
             return size;
         }
         bool contains(const T& elem) const{
@@ -63,6 +68,9 @@ class set {
             return false;
         }
         void add(const T& elem) {
+            for (int i = 0; i < size; i++)
+                if (array[i] == elem)
+                    return;
             if (size == capacity) {
                 capacity *= 2;
                 T* new_array = new T[capacity];
@@ -70,9 +78,6 @@ class set {
                 delete[] array;
                 array = new_array;
             }
-            for (int i = 0; i < size; i++)
-                if (array[i] == elem)
-                    return;
             array[size++] = elem;
         }
         void remove(const T& elem) {
@@ -83,52 +88,40 @@ class set {
                     return;
                 }
         }
-        T* to_array() const {
+        T* toArray() const {
             T* arr = new T[size];
             copy(array, array + size, arr);
             return arr;
         }
 
-        set<T> sunion(const set<T>& s) {
-            set<T> result = *this;
+        Set<T> sunion(const Set<T>& s) {
+            Set<T> result = *this;
             
-            SetIterator<T> it = s.begin();
-            while (!it.is_end()) {
-                result.add(it.value());
-                ++it;
-            }
+            for (T i : s) // foreach
+                result.add(i);
 
             return result;
         }
-        set<T> intersection(const set<T>& s) {
-            set<T> result;
+        Set<T> intersection(const Set<T>& s) {
+            Set<T> result;
 
-            SetIterator<T> it = s.begin();
-            while (!it.is_end()) {
-                if (contains(it.value()))
-                    result.add(it.value());
-                ++it;
-            }
+            for (T i : s)
+                if (contains(i))
+                    result.add(i);
 
             return result;
         }
         
-        set<T> difference(const set<T>& s) {
-            set<T> result;
+        Set<T> difference(const Set<T>& s) {
+            Set<T> result;
 
-            SetIterator<T> it = this->begin();
-            while (!it.is_end()) {
-                if (!s.contains(it.value()))
-                    result.add(it.value());
-                ++it;
-            }
+            for (T i : *this)
+                if (!s.contains(i))
+                    result.add(i);
 
-            SetIterator<T> it2 = s.begin();
-            while (!it2.is_end()) {
-                if (!contains(it2.value()))
-                    result.add(it2.value());
-                ++it2;
-            }
+            for (T i : s)
+                if (!contains(i))
+                    result.add(i);
 
             return result;
         }
@@ -137,13 +130,18 @@ class set {
             return SetIterator<T>(*this);
         }
         SetIterator<T> end() const {
-            return SetIterator<T>(*this, this->get_length());
+            return SetIterator<T>(*this, this->getLength());
         }
 
-        void clear();
+        void clear() {
+            delete[] array;
+            array = new T[DEFAULT_CAPACITY];
+            size = 0;
+            capacity = 0;
+        }
 
     // operator overloads
-        set<T>& operator =(const set<T> &obj) {
+        Set<T>& operator =(const Set<T> &obj) {
             if (this == &obj)
                 return *this;
 
@@ -158,8 +156,7 @@ class set {
 
             if (new_array) {
                 SetIterator<T> it = obj.begin();
-                SetIterator<T> end = obj.end();
-                while (it != end) {
+                while (!it.is_end()) {
                     new_array[it.index] = it.value();
                     ++it;
                 }
@@ -176,22 +173,27 @@ class set {
         }
 
         template<typename _T> friend 
-        ostream& operator <<(ostream& os, const set<_T>& lst)
+        ostream& operator <<(ostream& os, const Set<_T>& lst)
         {
-            SetIterator<_T> it = lst.begin();
-            while (!it.is_end()) {
-                os << it.value() << " ";
-                ++it;
-            }
+            for (_T i : lst)
+                os << i << " ";
         
             return os;
         };
 
-        set<T>& operator +=(const set<T>& s);
-        set<T>& operator *=(const set<T>& s);
-        set<T>& operator /=(const set<T>& s);
+        Set<T>& operator +=(const Set<T>& s)  {
+            return this->sunion(s);
+        }
 
-        bool operator ==(const set<T>& b) const{
+        Set<T>& operator *=(const Set<T>& s) {
+            return this->intersection(s);
+        }
+        Set<T>& operator /=(const Set<T>& s) {
+            return this->difference(s);
+        }
+        
+
+        bool operator ==(const Set<T>& b) const{
             if (this->size != b.size)
                 return false;
             for (int i = 0; i < this->size; i++)
@@ -201,23 +203,23 @@ class set {
         }
 
         template<typename _T> friend 
-        set<_T> operator +(const set<_T>& s1, const set<_T>& s2)
+        Set<_T> operator +(const Set<_T>& s1, const Set<_T>& s2)
         {
-            set<_T> res = s1;
+            Set<_T> res = s1;
             return res.sunion(s2);
         }
 
         template<typename _T> friend 
-        set<_T> operator *(const set<_T>& s1, const set<_T>& s2)
+        Set<_T> operator *(const Set<_T>& s1, const Set<_T>& s2)
         {
-            set<_T> res = s1;
+            Set<_T> res = s1;
             return res.intersection(s2);
         }        
 
         template<typename _T> friend 
-        set<_T> operator /(const set<_T>& s1, const set<_T>& s2)
+        Set<_T> operator /(const Set<_T>& s1, const Set<_T>& s2)
         {
-            set<_T> res = s1;
+            Set<_T> res = s1;
             return res.difference(s2);
         }
         
@@ -225,26 +227,24 @@ class set {
 
 template <typename T>
 class SetIterator : public Iterator<T> {
-    T* container;
+    const Set<T>& container;
     size_t len, index;
 
     public:
-        SetIterator(const set<T>& iterable, size_t index = 0) 
-            : container(iterable.to_array()), index(index), len(iterable.get_length()) {}
+        SetIterator(const Set<T>& iterable, size_t index = 0) 
+            : container(iterable), index(index), len(iterable.getLength()) {}
         
-        ~SetIterator() {
-            delete[] container;
-        }
+        ~SetIterator() = default;
 
         void next() override {
             if (index >= len)
                 throw out_of_range("Iterator out of bounds");
             ++index;
         }
-        T value() override {
+        T& value() override {
             if (index >= len)
                 throw out_of_range("Iterator is at end");
-            return container[index];
+            return container.array[index];
         }
         bool is_end() override {
             return len == 0 || index >= len;
@@ -253,8 +253,14 @@ class SetIterator : public Iterator<T> {
             this->next();
             return *this;
         }
-        SetIterator<T>& operator++(int);
-        T operator*() override {
+
+        SetIterator<T>& operator++(int) {
+            SetIterator temp = *this; 
+            ++(*this);                
+            return temp; 
+        }
+
+        T& operator*() override {
             return this->value();
         }
 
@@ -264,7 +270,7 @@ class SetIterator : public Iterator<T> {
                 return false;
             return (this->container == otherIt->container) && (this->index == otherIt->index);
         }
-        bool operator !=(SetIterator<T> &b);
+        bool operator !=(SetIterator<T> &b) {
+            return !(*this == b);
+        }
 }; 
-
-#endif

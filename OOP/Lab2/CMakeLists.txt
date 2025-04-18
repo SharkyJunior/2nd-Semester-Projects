@@ -9,6 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 file(GLOB SOURCE_FILES "${CMAKE_SOURCE_DIR}/Source/*.cpp")
 
 # Include the Source directory
+file(GLOB SOURCE_FILES "${CMAKE_SOURCE_DIR}/Source/*.h")
 file(GLOB SOURCE_FILES "${CMAKE_SOURCE_DIR}/Source/*.hpp")
 
 # Add the main file explicitly
