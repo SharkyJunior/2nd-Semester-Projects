@@ -125,11 +125,11 @@ void MainWindow::filterRegionButtonClicked() {
     strncpy(params.filterName, array.data(), array.size());
     params.filterName[array.size()] = '\0';
 
+    updateUi();
+
     params.filteredRowsCount = ui->dataTableWidget->rowCount();
 
     doOperation(FilterCSV, &context, &params);
-
-    updateUi();
 }
 
 void MainWindow::calcMetricsButtonClicked() {
@@ -147,8 +147,11 @@ void MainWindow::calcMetricsButtonClicked() {
     else
         handleErrorCode();
 
-    PlotWidget* plot = new PlotWidget();
-    plot->show();
+    if (strncmp(context.filterName, "", strlen(context.filterName))) {
+        PlotWidget* plot = new PlotWidget();
+        plot->setContext(&context);
+        plot->show();
+    }
 }
 
 QStringList MainWindow::convToQStringList() {
