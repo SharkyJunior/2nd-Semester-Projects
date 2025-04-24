@@ -30,6 +30,7 @@ struct CSVData {
 };
 
 struct Metrics {
+    int minYear, maxYear;
     double minValue, maxValue, medianValue;
 };
 

@@ -62,6 +62,7 @@ void setPath(AppContext* context, const char* filepath) {
 
 void calculateMetrics(AppContext* context) {
     double min, max, median;
+    long minYear, maxYear;
     int i = 0, tempLen = context->data->rowCount;
     RowNode* cur = context->data->head;
 
@@ -73,11 +74,21 @@ void calculateMetrics(AppContext* context) {
     min = strtod(cur->data[context->selectedColumn - 1], NULL);
     max = min;
 
+    minYear = strtol(cur->data[YEAR_COL], NULL, 10);
+    maxYear = minYear;
+
     while (cur != NULL) {
         if (!strcmp(context->filterName, "") || !strcmp(cur->data[REGION_COL], context->filterName)) {
-            char* endptr = NULL;
+            if (i == 0) {
+                min = strtod(cur->data[context->selectedColumn - 1], NULL);
+                max = min;
+                minYear = strtol(cur->data[YEAR_COL], NULL, 10);
+                maxYear = minYear;
+            }
+            char* endptr = NULL, *endptr2 = NULL;
             double val = strtod(cur->data[context->selectedColumn - 1], &endptr);
-            if (errno != 0 && endptr == cur->data[i]) {
+            long year = strtol(cur->data[YEAR_COL], &endptr2, 10);
+            if (errno != 0 && (endptr == cur->data[i] || endptr2 == cur->data[YEAR_COL])) {
                 context->errorCode = BAD_METRICS_VALUE;
                 break;
             }
@@ -85,6 +96,11 @@ void calculateMetrics(AppContext* context) {
                 min = val;
             else if (val > max)
                 max = val;
+
+            if (year < minYear)
+                minYear = year;
+            else if (year > maxYear)
+                maxYear = year;
 
             tempArr[i++] = val;
         }
@@ -98,6 +114,8 @@ void calculateMetrics(AppContext* context) {
         context->metrics->minValue = min;
         context->metrics->maxValue = max;
         context->metrics->medianValue = median;
+        context->metrics->minYear = minYear;
+        context->metrics->maxYear = maxYear;
     }
 
     free(tempArr);

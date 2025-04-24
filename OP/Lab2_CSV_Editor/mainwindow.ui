@@ -78,7 +78,7 @@
       <item>
        <widget class="QPushButton" name="calcMetricsButton">
         <property name="text">
-         <string>Calculate Metrics</string>
+         <string>Calculate and Draw</string>
         </property>
        </widget>
       </item>

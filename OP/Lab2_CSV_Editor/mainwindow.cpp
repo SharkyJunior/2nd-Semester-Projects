@@ -7,6 +7,7 @@
 #include <math.h>
 #include "entrypoint.h"
 #include "appcontext.h"
+#include "plotwidget.h"
 
 
 
@@ -124,11 +125,11 @@ void MainWindow::filterRegionButtonClicked() {
     strncpy(params.filterName, array.data(), array.size());
     params.filterName[array.size()] = '\0';
 
+    updateUi();
+
     params.filteredRowsCount = ui->dataTableWidget->rowCount();
 
     doOperation(FilterCSV, &context, &params);
-
-    updateUi();
 }
 
 void MainWindow::calcMetricsButtonClicked() {
@@ -145,6 +146,12 @@ void MainWindow::calcMetricsButtonClicked() {
     }
     else
         handleErrorCode();
+
+    if (strncmp(context.filterName, "", strlen(context.filterName))) {
+        PlotWidget* plot = new PlotWidget();
+        plot->setContext(&context);
+        plot->show();
+    }
 }
 
 QStringList MainWindow::convToQStringList() {

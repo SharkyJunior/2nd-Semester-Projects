@@ -274,7 +274,7 @@ public:
         filterRegionButton->setText(QCoreApplication::translate("MainWindow", "Filter region:", nullptr));
         chooseFileButton->setText(QCoreApplication::translate("MainWindow", "Choose file...", nullptr));
         loadDataButton->setText(QCoreApplication::translate("MainWindow", "Load data from file", nullptr));
-        calcMetricsButton->setText(QCoreApplication::translate("MainWindow", "Calculate Metrics", nullptr));
+        calcMetricsButton->setText(QCoreApplication::translate("MainWindow", "Calculate and Draw", nullptr));
         label_2->setText(QCoreApplication::translate("MainWindow", "Select column for metrics:", nullptr));
         label_6->setText(QCoreApplication::translate("MainWindow", "Metrics", nullptr));
         label_3->setText(QCoreApplication::translate("MainWindow", "Minimum Value", nullptr));
