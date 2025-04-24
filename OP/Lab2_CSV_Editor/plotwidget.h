@@ -14,6 +14,7 @@ private:
     const AppContext* context;
     unsigned column, medianY;
 
+    int width, height;
     int* xArr, *yArr, *xVal;
     double* yVal;
     size_t yMin, yMax, xMin, xMax;
@@ -35,6 +36,7 @@ private:
 
 protected:
     void paintEvent(QPaintEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
 
 public:
     explicit PlotWidget(QWidget* parent = nullptr);

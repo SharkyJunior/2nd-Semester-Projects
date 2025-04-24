@@ -1,6 +1,7 @@
 #include "plotwidget.h"
 #include "consts.h"
 
+#include <QResizeEvent>
 #include <string>
 #include <math.h>
 
@@ -10,6 +11,9 @@ PlotWidget::PlotWidget(QWidget* parent)
     : QWidget(parent)
 {
     setupUi();
+
+    width = PLOT_WINDOW_WIDTH;
+    height = PLOT_WINDOW_HEIGHT;
 
     yMin = MARGIN + AXLE_MARGIN;
     yMax = PLOT_WINDOW_HEIGHT - MARGIN - AXLE_MARGIN;
@@ -22,7 +26,8 @@ void PlotWidget::setContext(const AppContext* context) {
 }
 
 void PlotWidget::setupUi() {
-    setFixedSize(PLOT_WINDOW_WIDTH, PLOT_WINDOW_HEIGHT);
+    resize(PLOT_WINDOW_WIDTH, PLOT_WINDOW_HEIGHT);
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     setWindowTitle("Plot");
 }
 
@@ -33,6 +38,16 @@ void PlotWidget::paintEvent(QPaintEvent *event) {
     paintMarks();
 }
 
+void PlotWidget::resizeEvent(QResizeEvent *event) {
+    width = event->size().width();
+    height = event->size().height();
+
+    yMin = MARGIN + AXLE_MARGIN;
+    yMax = height - MARGIN - AXLE_MARGIN;
+    xMin = PLOT_LEFT_MARGIN + AXLE_MARGIN;
+    xMax = width - PLOT_RIGHT_MARGIN - AXLE_MARGIN;
+}
+
 void PlotWidget::paintAxles() {
     QPainter painter = QPainter(this);
 
@@ -40,9 +55,9 @@ void PlotWidget::paintAxles() {
     pen.setColor(QColor(Qt::GlobalColor::white));
     painter.setPen(pen);
 
-    painter.drawLine(PLOT_LEFT_MARGIN, MARGIN, PLOT_LEFT_MARGIN, PLOT_WINDOW_HEIGHT - MARGIN);
-    painter.drawLine(PLOT_LEFT_MARGIN, PLOT_WINDOW_HEIGHT - MARGIN,
-                     PLOT_WINDOW_WIDTH - PLOT_RIGHT_MARGIN, PLOT_WINDOW_HEIGHT - MARGIN);
+    painter.drawLine(PLOT_LEFT_MARGIN, MARGIN, PLOT_LEFT_MARGIN, height - MARGIN);
+    painter.drawLine(PLOT_LEFT_MARGIN, height - MARGIN,
+                     width - PLOT_RIGHT_MARGIN, height - MARGIN);
 }
 
 void PlotWidget::paintPlot() {
@@ -72,15 +87,15 @@ void PlotWidget::paintMinMaxMedian() {
     pen.setDashPattern({1, 4});
     painter.setPen(pen);
 
-    painter.drawLine(PLOT_LEFT_MARGIN, yMin, PLOT_WINDOW_WIDTH - PLOT_RIGHT_MARGIN, yMin);
+    painter.drawLine(PLOT_LEFT_MARGIN, yMin, width - PLOT_RIGHT_MARGIN, yMin);
 
     pen.setColor(QColor(Qt::GlobalColor::red));
     painter.setPen(pen);
-    painter.drawLine(PLOT_LEFT_MARGIN, yMax, PLOT_WINDOW_WIDTH - PLOT_RIGHT_MARGIN, yMax);
+    painter.drawLine(PLOT_LEFT_MARGIN, yMax, width - PLOT_RIGHT_MARGIN, yMax);
 
     pen.setColor(QColor(Qt::GlobalColor::blue));
     painter.setPen(pen);
-    painter.drawLine(PLOT_LEFT_MARGIN, medianY, PLOT_WINDOW_WIDTH - PLOT_RIGHT_MARGIN, medianY);
+    painter.drawLine(PLOT_LEFT_MARGIN, medianY, width - PLOT_RIGHT_MARGIN, medianY);
 
 
     // text
@@ -89,15 +104,16 @@ void PlotWidget::paintMinMaxMedian() {
 
     QString tempStr = "Max = ";
     tempStr += trimZeros(context->metrics->maxValue);
-    painter.drawText(PLOT_WINDOW_WIDTH - PLOT_RIGHT_MARGIN - TEXT_SHIFT_X, yMin - TEXT_SHIFT_Y, tempStr);
+    painter.drawText(width - PLOT_RIGHT_MARGIN - TEXT_SHIFT_X, yMin - TEXT_SHIFT_Y, tempStr);
 
     tempStr = "Min = ";
     tempStr += trimZeros(context->metrics->minValue);
-    painter.drawText(PLOT_WINDOW_WIDTH - PLOT_RIGHT_MARGIN - TEXT_SHIFT_X, yMax - TEXT_SHIFT_Y, tempStr);
+    painter.drawText(width - PLOT_RIGHT_MARGIN - TEXT_SHIFT_X, yMax - TEXT_SHIFT_Y, tempStr);
 
     tempStr = "Median = ";
     tempStr += trimZeros(context->metrics->medianValue);
-    painter.drawText(PLOT_WINDOW_WIDTH - PLOT_RIGHT_MARGIN - TEXT_SHIFT_X, medianY - TEXT_SHIFT_Y, tempStr);
+    painter.drawText(width
+                         - PLOT_RIGHT_MARGIN - TEXT_SHIFT_X, medianY - TEXT_SHIFT_Y, tempStr);
 
 }
 
