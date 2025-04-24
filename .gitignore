@@ -31,12 +31,7 @@
 *.out
 *.app
 
-# Generated folders
-main.dSYM/
-bin/
+
+
 .qtc_clangd/
 build/
-
-
-# CMake files
-CMakeLists.txt.user
