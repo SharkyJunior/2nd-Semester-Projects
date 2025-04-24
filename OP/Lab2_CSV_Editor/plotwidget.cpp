@@ -12,9 +12,6 @@ PlotWidget::PlotWidget(QWidget* parent)
 {
     setupUi();
 
-    width = PLOT_WINDOW_WIDTH;
-    height = PLOT_WINDOW_HEIGHT;
-
     yMin = MARGIN + AXLE_MARGIN;
     yMax = PLOT_WINDOW_HEIGHT - MARGIN - AXLE_MARGIN;
     xMin = PLOT_LEFT_MARGIN + AXLE_MARGIN;
@@ -26,8 +23,13 @@ void PlotWidget::setContext(const AppContext* context) {
 }
 
 void PlotWidget::setupUi() {
-    resize(PLOT_WINDOW_WIDTH, PLOT_WINDOW_HEIGHT);
+    width = PLOT_WINDOW_WIDTH;
+    height = PLOT_WINDOW_HEIGHT;
+
+    resize(width, height);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    setMinimumHeight(MARGIN * 2 + AXLE_MARGIN * 2 + MARK_COUNT_Y * 20);
+    setMinimumWidth(MARGIN * 2 + AXLE_MARGIN * 2 + MARK_DENSITY_X * (30 / MARK_DENSITY_X) * 20);
     setWindowTitle("Plot");
 }
 
@@ -89,11 +91,11 @@ void PlotWidget::paintMinMaxMedian() {
 
     painter.drawLine(PLOT_LEFT_MARGIN, yMin, width - PLOT_RIGHT_MARGIN, yMin);
 
-    pen.setColor(QColor(Qt::GlobalColor::red));
+    pen.setColor(QColor(Qt::GlobalColor::magenta));
     painter.setPen(pen);
     painter.drawLine(PLOT_LEFT_MARGIN, yMax, width - PLOT_RIGHT_MARGIN, yMax);
 
-    pen.setColor(QColor(Qt::GlobalColor::blue));
+    pen.setColor(QColor(Qt::GlobalColor::cyan));
     painter.setPen(pen);
     painter.drawLine(PLOT_LEFT_MARGIN, medianY, width - PLOT_RIGHT_MARGIN, medianY);
 
