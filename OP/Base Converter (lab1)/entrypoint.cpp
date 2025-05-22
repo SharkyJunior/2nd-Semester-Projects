@@ -57,11 +57,15 @@ void doConvert(AppContext* context) {
     strncpy(input, context->input, strlen(context->input) + 1);
 
     SelectedBase to = context->toBase;
+    SelectedBase from = context->fromBase;
 
     checkInput(context);
     if (context->errorCode == OK)
     {
-        if (to == context->fromBase || strlen(context->input) == 0) {
+        long int intInput = strtol(input, NULL, DEC_BASE);
+        if (from == DEC && fitsInInt(intInput))
+            context->errorCode = INTEGER_OVERFLOW;
+        else if (to == context->fromBase || strlen(context->input) == 0) {
             char* temp = trimZeros(input, &context->errorCode);
             strncpy(input, temp, strlen(temp) + 1);
             strncpy(context->output, input, strlen(input) + 1);
