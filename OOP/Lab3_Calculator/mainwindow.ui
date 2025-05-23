@@ -19,7 +19,7 @@
      <widget class="QTextEdit" name="formulaLabel">
       <property name="font">
        <font>
-        <pointsize>16</pointsize>
+        <pointsize>20</pointsize>
        </font>
       </property>
       <property name="undoRedoEnabled">
