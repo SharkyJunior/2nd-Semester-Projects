@@ -1,0 +1,13 @@
+#ifndef CONSTS_H
+#define CONSTS_H
+
+#define MAX_PATH_LEN 4096
+#define MAX_CSVLINE_LENGTH 2048
+
+#define PI_RADIAN 180
+#define DISTANCE 500
+#define SCALE_MULTIPLIER 3
+#define SCROLL_MULTIPLIER 0.01
+#define PAN_MULTIPLIER 0.3
+
+#endif // CONSTS_H

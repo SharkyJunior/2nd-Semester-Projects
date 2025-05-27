@@ -44,9 +44,7 @@ void PlotWidget::resizeEvent(QResizeEvent *event) {
     width = event->size().width();
     height = event->size().height();
 
-    yMin = MARGIN + AXLE_MARGIN;
     yMax = height - MARGIN - AXLE_MARGIN;
-    xMin = PLOT_LEFT_MARGIN + AXLE_MARGIN;
     xMax = width - PLOT_RIGHT_MARGIN - AXLE_MARGIN;
 }
 
