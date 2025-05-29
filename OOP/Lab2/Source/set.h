@@ -22,8 +22,8 @@ class Set {
     // constructors & destructor
         Set();
         Set(T* arr, size_t length);
-        Set(const Set<T> &obj);
-        Set (Set <T>&& s);
+        Set(const Set<T>& obj);
+        Set(Set <T>&& s);
         explicit Set(initializer_list<T> lst);
         ~Set() = default;
 

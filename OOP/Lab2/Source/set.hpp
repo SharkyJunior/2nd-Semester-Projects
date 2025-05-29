@@ -137,7 +137,7 @@ class Set {
             delete[] array;
             array = new T[DEFAULT_CAPACITY];
             size = 0;
-            capacity = 0;
+            capacity = DEFAULT_CAPACITY;
         }
 
     // operator overloads
@@ -150,7 +150,7 @@ class Set {
                 try {
                     new_array = new T[obj.capacity];
                 } catch (const std::bad_alloc& e) {
-                        throw;
+                    throw;
                 }
             }
 
@@ -192,7 +192,7 @@ class Set {
             return this->difference(s);
         }
         
-
+        // obj1 == obj2       obj1.equals(obj2)
         bool operator ==(const Set<T>& b) const{
             if (this->size != b.size)
                 return false;

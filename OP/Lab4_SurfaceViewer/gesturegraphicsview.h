@@ -22,7 +22,10 @@ protected:
 private:
     bool dragging = false, rotating = false;
     QPoint lastMousePos;
+    QVector3D lastSpherePos;
     MainWindow* window;
+
+    QVector3D projectToSphere(int x, int y, int w, int h);
 };
 
 #endif // GESTUREGRAPHICSVIEW_H

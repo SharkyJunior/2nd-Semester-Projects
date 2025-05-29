@@ -1,5 +1,7 @@
 #include "gesturegraphicsview.h"
 
+#include <QQuaternion>
+
 GestureGraphicsView::GestureGraphicsView(QWidget* parent)
     : QGraphicsView(parent)
 {
@@ -34,6 +36,9 @@ void GestureGraphicsView::mousePressEvent(QMouseEvent* event) {
     if (event->button() == Qt::LeftButton) {
         rotating = true;
         lastMousePos = event->pos();
+        lastSpherePos = projectToSphere(event->pos().x(),
+                                        event->pos().y(),
+                                        width(), height());
     }
     QGraphicsView::mousePressEvent(event);
 }
@@ -54,14 +59,25 @@ void GestureGraphicsView::mouseMoveEvent(QMouseEvent* event) {
         window->isGesture = false;
     }
     else if (rotating) {
-        QPointF delta = mapToScene(event->pos()) - mapToScene(lastMousePos);
-        double pitchRad = window->context.camera.angleX * M_PI / PI_RADIAN;
+        QVector3D curSpherePos = projectToSphere(
+            event->pos().x(), event->pos().y(), width(), height());
 
-        window->context.camera.angleX += delta.x() * PAN_MULTIPLIER * std::cos(pitchRad);
-        window->context.camera.angleX = std::clamp(window->context.camera.angleX, -90.0, 90.0);
-        window->context.camera.angleY -= delta.y() * PAN_MULTIPLIER;
-        window->context.camera.angleY = std::clamp(window->context.camera.angleY, -90.0, 90.0);
-        lastMousePos = event->pos();
+        QVector3D axis = QVector3D::crossProduct(lastSpherePos, curSpherePos).normalized();
+        double angle = std::acos(std::min(1.0f, QVector3D::dotProduct(lastSpherePos, curSpherePos)));
+
+        double deltaDeg = angle * PI_RADIAN/M_PI;
+
+        // apply the rotation around each axis
+        window->context.camera.angleX -= axis.x() * deltaDeg;
+        window->context.camera.angleY -= axis.y() * deltaDeg;
+        window->context.camera.angleZ -= axis.z() * deltaDeg;
+
+        // keep angles in a sane range (optional)
+        window->context.camera.angleX = std::fmod(window->context.camera.angleX + 360.0, 360.0);
+        window->context.camera.angleY = std::fmod(window->context.camera.angleY + 360.0, 360.0);
+        window->context.camera.angleZ = std::fmod(window->context.camera.angleZ + 360.0, 360.0);
+
+        lastSpherePos = curSpherePos;
 
         window->isGesture = true;
 
@@ -82,4 +98,13 @@ void GestureGraphicsView::mouseReleaseEvent(QMouseEvent* event) {
         rotating = false;
     }
     QGraphicsView::mouseReleaseEvent(event);
+}
+
+
+QVector3D GestureGraphicsView::projectToSphere(int x, int y, int w, int h) {
+    double nx =  (2.0 * x - w) / w;
+    double ny = -(2.0 * y - h) / h;
+    double length2 = nx*nx + ny*ny;
+    double nz = length2 < 1.0 ? std::sqrt(1.0 - length2) : 0.0;
+    return QVector3D(nx, ny, nz);
 }
