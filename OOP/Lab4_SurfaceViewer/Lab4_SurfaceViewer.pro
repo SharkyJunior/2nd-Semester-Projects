@@ -20,8 +20,8 @@ SOURCES += \
     mainwindow.cpp \
     normalizationparameters.cpp \
     point3d.cpp \
+    qtscenedrawer.cpp \
     scene.cpp \
-    sceneobject.cpp \
     surfacepainter.cpp \
     transformmatrix.cpp \
     vertex.cpp

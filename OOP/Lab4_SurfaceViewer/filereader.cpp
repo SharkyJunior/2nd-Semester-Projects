@@ -1,5 +1,7 @@
 #include "filereader.h"
 
+#include <QDebug>
+
 #include "consts.h"
 #include "exceptions.h"
 
@@ -18,27 +20,21 @@ Figure FileReader::readFigure(const string& path, const NormalizationParameters&
     size_t rows = lineCount();
     size_t columns = rowCount();
 
+    rewind(file);
+
     if (columns == 0 || rows == 0)
         throw BadFileException("No rows or columns.");
 
     vector< vector<double> > data = vector< vector<double> >();
 
+    bool valuesSet = false;
     double dataMin, dataMax;
     while (fgets(buff, MAX_CSVLINE_LENGTH, file)) {
         buff[strcspn(buff, "\r\n")] = '\0';
-        vector<double> row = vector<double>();
+        vector<double>* row = new vector<double>();
         char* endptr = NULL;
 
         char* token = strtok(buff, ",");
-
-        double value = strtod(token, &endptr);
-        if (token == endptr) {
-            throw BadFileException("Invalid value / not a number.");
-            break;
-        }
-        dataMin = value;
-        dataMax = value;
-
         while (token != NULL) {
             double value = strtod(token, &endptr);
             if (token == endptr) {
@@ -46,19 +42,28 @@ Figure FileReader::readFigure(const string& path, const NormalizationParameters&
                 break;
             }
 
+            if (!valuesSet) {
+                dataMin = value;
+                dataMax = value;
+                valuesSet = true;
+            }
+
             if (value > dataMax)
                 dataMax = value;
             if (value < dataMin)
                 dataMin = value;
 
-            row.push_back(value);
+            row->push_back(value);
 
             token = strtok(NULL, ",");
         }
 
-        data.push_back(row);
+        data.push_back(*row);
     }
 
+    for (vector<double>& v : data)
+        for (double d : v)
+            qDebug() << d;
 
     // normalizing values, creating vertices and edges between them -> figure
 
@@ -67,6 +72,9 @@ Figure FileReader::readFigure(const string& path, const NormalizationParameters&
     double dxStep = normParams.dxStep();
     double dyStep = normParams.dyStep();
 
+    double centerX = normParams.windowW() / 2;
+    double centerY = normParams.windowH() / 2;
+
     double centerIndexX = columns / 2;
     double centerIndexY = rows / 2;
 
@@ -74,43 +82,29 @@ Figure FileReader::readFigure(const string& path, const NormalizationParameters&
 
     Vertex prevVertex, curVertex;
 
-    double x = (0.5 - centerIndexX) * dxStep;
-    double y = (0.5 - centerIndexY) * dyStep;
-    double z = normMin + (data[0][0] - dataMin) * (normMax - normMin) / (dataMax - dataMin);
+    rows = data.size();
+    unsigned cols = data[0].size();
 
-    curVertex = Vertex(Point3D(x, y, z));
+    std::vector<Vertex> vertices;
+    vertices.reserve(rows * cols);
 
-    for (unsigned j = 1; j < data[0].size(); j++) {
-        x = (0.5 - centerIndexX) * dxStep;
-        y = (j + 0.5 - centerIndexY) * dyStep;
-        z = normMin + (data[0][j] - dataMin) * (normMax - normMin) / (dataMax - dataMin);
+    for (unsigned i = 0; i < rows; ++i) {
+        for (unsigned j = 0; j < cols; ++j) {
+            double x = centerX + (i + 0.5 - centerIndexX) * dxStep;
+            double y = centerY - (j + 0.5 - centerIndexY) * dyStep;
+            double z = normMin + (data[i][j] - dataMin) * (normMax - normMin) / (dataMax - dataMin);
 
-        prevVertex = curVertex;
-        curVertex = Vertex(Point3D(x, y, z));
+            Vertex v(Point3D(x, y, z));
+            figure.addVertex(v);
+            vertices.push_back(v);
 
-        figure.addVertex(curVertex);
-        figure.addEdge(Edge(prevVertex, curVertex));
-    }
+            if (j > 0) {
+                figure.addEdge(Edge(vertices[i * cols + (j - 1)], v));
+            }
 
-    for (unsigned i = 1; i < data.size(); i++) {
-        x = (i + 0.5 - centerIndexX) * dxStep;
-        y = (0.5 - centerIndexY) * dyStep;
-        z = normMin + (data[i][0] - dataMin) * (normMax - normMin) / (dataMax - dataMin);
-
-        curVertex = Vertex(Point3D(x, y, z));
-        figure.addEdge(Edge(figure.getVertices()[(i-1)*columns], curVertex));
-
-        for (unsigned j = 1; j < data[0].size(); j++) {
-            x = (i + 0.5 - centerIndexX) * dxStep;
-            y = (j + 0.5 - centerIndexY) * dyStep;
-            z = normMin + (data[i][j] - dataMin) * (normMax - normMin) / (dataMax - dataMin);
-
-            prevVertex = curVertex;
-            curVertex = Vertex(Point3D(x, y, z));
-
-            figure.addVertex(curVertex);
-            figure.addEdge(Edge(prevVertex, curVertex));
-            figure.addEdge(Edge(figure.getVertices()[(i-1)*columns + j], curVertex));
+            if (i > 0) {
+                figure.addEdge(Edge(vertices[(i - 1) * cols + j], v));
+            }
         }
     }
 

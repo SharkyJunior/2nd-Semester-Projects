@@ -11,7 +11,8 @@ using namespace std;
 
 class BaseFileReader {
 public:
-    virtual Figure readFigure(const string& path, const NormalizationParameters& normParams);
+    virtual Figure readFigure(const string& path, const NormalizationParameters& normParams) = 0;
+    virtual ~BaseFileReader() {}
 };
 
 class FileReader : public BaseFileReader

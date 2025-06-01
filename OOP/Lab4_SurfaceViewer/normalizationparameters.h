@@ -5,10 +5,12 @@
 
 class NormalizationParameters {
     double _min, _max, _dxStep, _dyStep;
+    int _windowW, _windowH;
 
 public:
     NormalizationParameters();
-    NormalizationParameters(double min, double max, double dxStep, double dyStep);
+    NormalizationParameters(double min, double max, double dxStep,
+                            double dyStep, int _windowW, int _windowH);
 
     double min() const;
     void setMin(double value);
@@ -18,6 +20,10 @@ public:
     void setDxStep(double value);
     double dyStep() const;
     void setDyStep(double value);
+    int windowH() const;
+    void setWindowH(int value);
+    int windowW() const;
+    void setWindowW(int value);
 };
 
 

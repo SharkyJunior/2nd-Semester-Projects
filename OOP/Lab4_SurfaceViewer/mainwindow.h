@@ -2,8 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QGraphicsView>
 
-#include "appcontext.h"
+#include "facade.h"
+#include "scene.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -11,11 +14,23 @@ class MainWindow;
 }
 QT_END_NAMESPACE
 
+// done
+class QtSceneDrawer : public SceneDrawerBase {
+public:
+    QtSceneDrawer();
+    void setView(QGraphicsView* view);
+    void drawScene(const Scene& scene) override;
+private:
+    QGraphicsView* _view;
+};
+
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
     friend class GestureGraphicsView;
+    friend void QtSceneDrawer::drawScene(const Scene& scene);
 
 public:
     MainWindow(QWidget *parent = nullptr);
@@ -23,17 +38,24 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    AppContext context;
-    bool loadingInProgress = false, isGesture = false;
+    FileReader fileReader;
+    QtSceneDrawer drawer;
+    Facade facade;
+    NormalizationParameters normParams;
+    bool editingValues = false;
 
     // utilities
-    void setInitialValues();
-    void handleErrorCode();
-    void updateUi();
+    void throwException(const std::exception& e);
+
+    void gestureScale(double delta);
+    void gestureMove(double deltaX, double deltaY);
+    void gestureRotate(double deltaX, double deltaY, double deltaZ);
+
+    void resetEditor();
 
     // slots
     void loadFileButtonClicked();
-
     void onEditorChanged();
+
 };
 #endif // MAINWINDOW_H

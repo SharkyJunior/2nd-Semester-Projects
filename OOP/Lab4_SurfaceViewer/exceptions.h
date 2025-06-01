@@ -3,9 +3,12 @@
 
 #include <string>
 
-class BaseException : public std::exception
+class FileNotOpenedException : public std::exception
 {
 public:
+    explicit FileNotOpenedException(const std::string& message){
+        this->msg = message;
+    }
     const char* what() const noexcept override {
         return msg.c_str();
     }
@@ -14,18 +17,10 @@ private:
     std::string msg;
 };
 
-class FileNotOpenedException : public BaseException
+class BadFileException : public std::exception
 {
 public:
-    explicit FileNotOpenedException(const std::string& message){
-        this->msg = message;
-    }
-};
-
-class EmptyFileException : public std::exception
-{
-public:
-    explicit EmptyFileException(const std::string& message){
+    explicit BadFileException(const std::string& message){
         this->msg = message;
     }
     const char* what() const noexcept override {
