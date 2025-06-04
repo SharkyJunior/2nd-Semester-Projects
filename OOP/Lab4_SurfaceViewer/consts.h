@@ -11,5 +11,6 @@
 #define SCALE_MULTIPLIER 3
 #define SCROLL_MULTIPLIER 0.01
 #define PAN_MULTIPLIER 0.3
+#define AXLE_LEN 20
 
 #endif // CONSTS_H

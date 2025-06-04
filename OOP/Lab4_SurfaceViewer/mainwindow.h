@@ -19,9 +19,15 @@ class QtSceneDrawer : public SceneDrawerBase {
 public:
     QtSceneDrawer();
     void setView(QGraphicsView* view);
+    void drawAxles(bool value);
+    void setNormParams(NormalizationParameters normParams);
+    void setSceneState(SceneState* state);
     void drawScene(const Scene& scene) override;
 private:
     QGraphicsView* _view;
+    NormalizationParameters _normParams;
+    SceneState* _state;
+    bool _drawAxles = false;
 };
 
 

@@ -9,9 +9,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    csv.cpp \
     edge.cpp \
-    entrypoint.cpp \
     facade.cpp \
     figure.cpp \
     filereader.cpp \
@@ -22,16 +20,12 @@ SOURCES += \
     point3d.cpp \
     qtscenedrawer.cpp \
     scene.cpp \
-    surfacepainter.cpp \
     transformmatrix.cpp \
     vertex.cpp
 
 HEADERS += \
-    appcontext.h \
     consts.h \
-    csv.h \
     edge.h \
-    entrypoint.h \
     exceptions.h \
     facade.h \
     figure.h \
@@ -42,7 +36,6 @@ HEADERS += \
     point3d.h \
     scene.h \
     sceneobject.h \
-    surfacepainter.h \
     transformmatrix.h \
     vertex.h
 

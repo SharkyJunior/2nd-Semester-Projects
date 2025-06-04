@@ -14,6 +14,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     drawer.setView(ui->graphicsView);
+    drawer.drawAxles(true);
+    drawer.setSceneState(facade.sceneState());
 
     ui->graphicsView->setWindow(this);
 
@@ -45,6 +47,8 @@ void MainWindow::loadFileButtonClicked() {
     normParams.setDyStep(ui->stepYSpinBox->value());
     normParams.setWindowH(ui->graphicsView->height());
     normParams.setWindowW(ui->graphicsView->width());
+
+    drawer.setNormParams(normParams);
 
     editingValues = true;
     resetEditor();

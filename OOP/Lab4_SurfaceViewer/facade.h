@@ -27,14 +27,13 @@ public:
     FacadeOperationResult rotateScene(double x, double y, double z);
     FacadeOperationResult scaleScene(double x, double y, double z);
 
+    SceneState* sceneState();
+
 private:
     BaseFileReader* _fileReader;
     SceneDrawerBase* _sceneDrawer;
     Scene _scene;
-
-    double curPosX, curPosY, curPosZ,
-        curRotX, curRotY, curRotZ,
-        curScaleX, curScaleY, curScaleZ;
+    SceneState _sceneState;
     bool posSet = false, rotSet = false, scaleSet = false;
 };
 

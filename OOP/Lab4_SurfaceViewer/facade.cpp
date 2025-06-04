@@ -28,7 +28,7 @@ Facade::Facade(BaseFileReader& fileReader, SceneDrawerBase& sceneDrawer)
 FacadeOperationResult Facade::drawScene() {
     try {
         _sceneDrawer->drawScene(_scene);
-    } catch (std::exception e) {
+    } catch (const std::exception& e) {
         return FacadeOperationResult(false, e.what());
     }
 
@@ -39,7 +39,7 @@ FacadeOperationResult Facade::loadFigure(const string& path,
                                          NormalizationParameters normParams) {
     try {
         _scene.addFigure( _fileReader->readFigure(path, normParams) );
-    } catch (std::exception e) {
+    } catch (const std::exception& e) {
         return FacadeOperationResult(false, e.what());
     }
 
@@ -50,9 +50,9 @@ FacadeOperationResult Facade::moveScene(double x, double y, double z) {
     double dx = x, dy = y, dz = z;
 
     if (posSet) {
-        dx = x - curPosX;
-        dy = y - curPosY;
-        dz = z - curPosZ;
+        dx = x - _sceneState.getCurPosX();
+        dy = y - _sceneState.getCurPosY();
+        dz = z - _sceneState.getCurPosZ();
     }
 
     if (dx == 0 && dy == 0 && dz == 0)
@@ -60,7 +60,9 @@ FacadeOperationResult Facade::moveScene(double x, double y, double z) {
 
     try {
         _scene.transformFigures(TransformMatrixBuilder::createMoveMatrix(dx, dy, dz));
-        curPosX = x; curPosY = y; curPosZ = z;
+        _sceneState.setCurPosX(x);
+        _sceneState.setCurPosY(y);
+        _sceneState.setCurPosZ(z);
     } catch (const std::exception& e) {
         return FacadeOperationResult(false, e.what());
     }
@@ -74,9 +76,9 @@ FacadeOperationResult Facade::scaleScene(double x, double y, double z) {
     double dx = x, dy = y, dz = z;
 
     if (scaleSet) {
-        dx = x / curScaleX;
-        dy = y / curScaleY;
-        dz = z / curScaleZ;
+        dx = x / _sceneState.getCurScaleX();
+        dy = y / _sceneState.getCurScaleY();
+        dz = z / _sceneState.getCurScaleZ();
     }
 
     if (dx == 1 && dy == 1 && dz == 1)
@@ -85,7 +87,9 @@ FacadeOperationResult Facade::scaleScene(double x, double y, double z) {
 
     try {
         _scene.transformFigures(TransformMatrixBuilder::createScaleMatrix(dx, dy, dz));
-        curScaleX = x; curScaleY = y; curScaleZ = z;
+        _sceneState.setCurScaleX(x);
+        _sceneState.setCurScaleY(y);
+        _sceneState.setCurScaleZ(z);
     } catch (std::exception e) {
         return FacadeOperationResult(false, e.what());
     }
@@ -99,9 +103,9 @@ FacadeOperationResult Facade::rotateScene(double x, double y, double z) {
     double dx = x, dy = y, dz = z;
 
     if (rotSet) {
-        dx = (x - curRotX) * M_PI / PI_RADIAN;
-        dy = (y - curRotY) * M_PI / PI_RADIAN;
-        dz = (z - curRotZ) * M_PI / PI_RADIAN;
+        dx = (x - _sceneState.getCurRotX()) * M_PI / PI_RADIAN;
+        dy = (y - _sceneState.getCurRotY()) * M_PI / PI_RADIAN;
+        dz = (z - _sceneState.getCurRotZ()) * M_PI / PI_RADIAN;
     }
 
     if ((dx + dy + dz) == 0)
@@ -109,7 +113,9 @@ FacadeOperationResult Facade::rotateScene(double x, double y, double z) {
 
     try {
         _scene.transformFigures(TransformMatrixBuilder::createRotationMatrix(dx, dy, dz));
-        curRotX = x; curRotY = y; curRotZ = z;
+        _sceneState.setCurRotX(x);
+        _sceneState.setCurRotY(y);
+        _sceneState.setCurRotZ(z);
     } catch (std::exception e) {
         return FacadeOperationResult(false, e.what());
     }
@@ -119,7 +125,6 @@ FacadeOperationResult Facade::rotateScene(double x, double y, double z) {
     return FacadeOperationResult(true);
 }
 
-
-
+SceneState* Facade::sceneState() { return &_sceneState; }
 
 
