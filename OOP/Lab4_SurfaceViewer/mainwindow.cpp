@@ -55,8 +55,8 @@ void MainWindow::loadFileButtonClicked() {
     editingValues = false;
 
     try {
-    facade.loadFigure(fileName.toStdString(), normParams);
-    facade.drawScene();
+        facade.loadFigure(fileName.toStdString(), normParams);
+        facade.drawScene();
 
     } catch (std::exception e) {
         throwException(e);

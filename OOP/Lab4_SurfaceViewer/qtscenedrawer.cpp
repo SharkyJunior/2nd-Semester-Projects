@@ -29,6 +29,13 @@ void QtSceneDrawer::drawScene(const Scene& scene) {
                            e.getEnd().getPosition().y(), pen);
     }
 
-    _view->setScene(qscene);
 
+    //qscene->setSceneRect(qscene->itemsBoundingRect()); // Adjust scene rect to fit content
+    _view->setScene(qscene);
+    _view->centerOn(qscene->sceneRect().center()); // Proper centering
+    //qscene->setSceneRect(0, 0, _view->width(), _view->height());
+    // QRectF sceneRect = qscene->sceneRect();
+    // QPointF center = sceneRect.center();
+    // _view->setScene(qscene);
+    // _view->centerOn(center);
 }

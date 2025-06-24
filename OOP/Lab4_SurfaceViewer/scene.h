@@ -33,7 +33,6 @@ class SceneState {
         curScaleX, curScaleY, curScaleZ;
 
 public:
-    // Position Getters and Setters
     double getCurPosX() const { return curPosX; }
     void setCurPosX(double value) { curPosX = value; }
 
@@ -43,7 +42,6 @@ public:
     double getCurPosZ() const { return curPosZ; }
     void setCurPosZ(double value) { curPosZ = value; }
 
-    // Rotation Getters and Setters
     double getCurRotX() const { return curRotX; }
     void setCurRotX(double value) { curRotX = value; }
 
@@ -53,7 +51,6 @@ public:
     double getCurRotZ() const { return curRotZ; }
     void setCurRotZ(double value) { curRotZ = value; }
 
-    // Scale Getters and Setters
     double getCurScaleX() const { return curScaleX; }
     void setCurScaleX(double value) { curScaleX = value; }
 
